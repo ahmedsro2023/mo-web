@@ -1,19 +1,29 @@
-# OPSMO website (v2)
+# OPSMO website
 
-Static site — HTML, CSS and vanilla JS. No build step, no dependencies.
+Static rebuild of opsmo.tech — every page and link of the original site, same copy, with a **light (white)** and **dark (black)** theme.
+
+## Themes
+- Toggle with the sun/moon button in the navigation. The choice is remembered.
+- Direct links: add `?theme=dark` or `?theme=light` to any URL (e.g. `/?theme=dark`).
+
+## Pages (40)
+Home · Solutions (+10) · Platforms (+5) · Industries (+7) · Managed Services · Insights (+4 articles) · About · Founder · Approach · Packages · Contact · Book · Privacy · Terms
 
 ## Run locally
-Open `index.html` in a browser, or:
 ```
-python3 -m http.server 8080   # http://localhost:8080
+python3 -m http.server 8080   # then open http://localhost:8080
 ```
 
 ## Deploy
-- GitHub Pages: Settings → Pages → Deploy from branch `main` / root (public repo on the free plan).
-- Vercel / Netlify: import the repo, framework "Other", no build command, output `/`.
+- **Vercel / Netlify:** import the repo, framework "Other", no build command, output directory `/`.
+- **GitHub Pages:** Settings → Pages → Deploy from branch `main` / root. Paths are relative, so it also works under `/mo-web/`.
+
+## Editing content
+Content lives in `_src/` (Markdown files + Python data). Rebuild from the repo root with:
+```
+OUT=. python3 _src/build.py
+```
 
 ## Before going live
-1. Connect the contact form: set `FORM_ENDPOINT` in `assets/js/main.js` (e.g. Formspree).
-2. Have Mohamed approve the track-record figures and the founder copy (taken from his LinkedIn).
-3. Photos are from Unsplash (free licence). Swap in real OPSMO photos when available — same file names in `assets/img/`.
-4. Add Privacy / Terms pages.
+1. Forms: set `FORM_ENDPOINT` in `assets/js/main.js` (e.g. Formspree) so Contact and Book submissions are received.
+2. Photos are from Unsplash — replace with real OPSMO photos using the same file names in `assets/img/`.
