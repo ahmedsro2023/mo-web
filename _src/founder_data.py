@@ -22,10 +22,10 @@ ELSEWHERE = [
  ("PROFILE","LinkedIn profile","Experience, background and current work.","https://www.linkedin.com/in/mo-rashwan/"),
 ]
 ZOHO_LINKS = [
- ("Zoho One","45+ integrated apps on one platform, the operating system for business.","https://go.zoho.com/9L1"),
+ ("Zoho One","45+ integrated apps on one platform — the operating system for business.","https://go.zoho.com/9L1"),
  ("Zoho CRM","Pipeline, automation and forecasting for sales teams.","https://go.zoho.com/JUB4"),
  ("Zoho Desk","Support tickets, service levels and customer history.","https://go.zoho.com/yTcH"),
  ("Zoho.com","Browse the full Zoho product catalogue.","https://go.zoho.com/D8l"),
 ]
-LEADER_BIO = "Mohamed works at the intersection of commercial operations and business systems: CRM architecture, process design, integration, and the reporting leadership teams depend on. His work focuses on one question, does this system change how the business actually operates? He was the first Egyptian hire at Zoho and the first team member in Zoho Egypt."
+LEADER_BIO = "Mohamed works at the intersection of commercial operations and business systems: CRM architecture, process design, integration, and the reporting leadership teams depend on. His work focuses on one question: does this system change how the business actually operates? He was the first Egyptian hire at Zoho and the first team member in Zoho Egypt."
 LEADER_NOTE = "OPSMO is delivered as a company capability. Engagements are led by the principal and supported by specialist implementation resources as scope requires."

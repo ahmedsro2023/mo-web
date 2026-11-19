@@ -42,11 +42,11 @@ METHOD = [
  ("Design","We design the target operating architecture, data model, pipeline stages, ownership, automation logic and reporting layers.",["SOLUTION ARCHITECTURE","PROCESS BLUEPRINTS","DATA & KPI MODEL"]),
  ("Implement","Configuration, custom modules, fields, permissions, forms and views, built to the design and tested against real scenarios.",["CONFIGURED SYSTEM","MIGRATION SCRIPTS","TEST SCRIPTS & SIGN-OFF"]),
  ("Integrate","We connect CRM to finance, marketing channels, websites, communication tools and enterprise applications over managed APIs.",["INTEGRATION MAP","WORKING DATA FLOWS","MONITORING & ALERTS"]),
- ("Operate","Administration, user management, troubleshooting and change control, the discipline that keeps the system trusted.",["SUPPORT PROCESS","ADMIN RUNBOOK","MONTHLY SYSTEM REVIEW"]),
+ ("Operate","Administration, user management, troubleshooting and change control — the discipline that keeps the system trusted.",["SUPPORT PROCESS","ADMIN RUNBOOK","MONTHLY SYSTEM REVIEW"]),
  ("Optimize","We measure adoption and commercial performance, then improve workflows, automation and reporting on a planned cadence.",["ADOPTION METRICS","IMPROVEMENT BACKLOG","QUARTERLY ROADMAP"]),
 ]
 RECEIVE = [
- "Operating process map, how the business runs today and how it will run after implementation",
+ "Operating process map: how the business runs today and how it will run after implementation",
  "Solution architecture and data model, documented field by field",
  "Configured, tested and permission-controlled system",
  "Integration map with field ownership, direction and failure handling",

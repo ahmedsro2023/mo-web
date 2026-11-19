@@ -6,7 +6,7 @@ The basis on which this website and its content are provided.
 
 ## 
 @legal
-1. Scope :: These terms govern your use of the opsmo.tech website. Commercial engagements, implementation projects, managed services and any other paid work, are governed exclusively by a separate signed agreement, which takes precedence over anything published here.
+1. Scope :: These terms govern your use of the opsmo.tech website. Commercial engagements, implementation projects, managed services and any other paid work are governed exclusively by a separate signed agreement, which takes precedence over anything published here.
 1. Information on this site :: Service descriptions, methodologies and package categories describe our capability and approach. They are not an offer, a quotation or a guarantee of outcome. Pricing for implementation and managed services is quoted per engagement after scoping.
 1. No professional advice :: Content published on this site, including Insights articles, is general commentary on systems and operations. It is not professional, legal, financial or technical advice for your specific situation and should not be relied on as such.
 1. Platform and vendor references :: Platform names including Zoho, Salesforce, Odoo, Microsoft Power BI and n8n are the property of their respective owners and are referenced to describe implementation capability. Unless stated in writing, no partnership, certification or reseller relationship is claimed or implied.

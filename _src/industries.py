@@ -4,7 +4,7 @@ IND = {}
 IND["real-estate"] = dict(doc="Real Estate, CRM & Operations Systems | OPSMO", v="REAL_ESTATE", name="Real Estate", img="skyline",
  tagline="From portal enquiry to signed contract, without losing a lead.",
  intro="Property enquiries arrive from portals, websites and brokers within minutes. We build the capture, assignment, qualification and deal structure that turns volume into transactions.",
- flow=["Lead generation, portals, website, paid channels, broker network","Capture and deduplication, one record per buyer, source preserved","Assignment, round-robin, project or territory rules","Qualification, budget, intent, timeline, requirement captured","Viewing, scheduled, logged and followed up","Deal management, unit, price, payment plan, approvals","Contract, documentation and handover to finance","Reporting, source-to-deal conversion and agent performance"],
+ flow=["Lead generation: portals, website, paid channels and broker network","Capture and deduplication: one record per buyer, source preserved","Assignment: round-robin, project or territory rules","Qualification: budget, intent, timeline and requirement captured","Viewings scheduled, logged and followed up","Deal management: unit, price, payment plan and approvals","Contract, documentation and handover to finance","Reporting on source-to-deal conversion and agent performance"],
  spec=["Portals such as Property Finder and Bayut, where API access permits, alongside website forms and campaign leads","Broker and agent management with visibility rules per team","Property and unit inventory structures linked to opportunities","Response-time automation, since enquiry speed determines conversion","Developer, agency and secondary-market process variants"])
 IND["professional-services"] = dict(doc="Professional Services, CRM & Operations Systems | OPSMO", v="SERVICES", name="Professional Services", img="team",
  tagline="Pipeline, delivery and billing connected as one engagement.",
@@ -21,7 +21,7 @@ IND["events-communities"] = dict(doc="Events & Communities, CRM & Operations Sys
  intro="Event and community businesses juggle registrations, sponsors and membership in parallel. We unify them into a single commercial record.",
  flow=["Registration capture and ticketing","Attendee and member records with lifecycle status","Sponsor and partner pipeline","Programme and speaker management","Check-in and attendance tracking","Post-event reporting and renewal campaigns"],
  spec=["Registration platforms integrated to CRM records","Membership tiers and renewal automation","Sponsor packages managed as opportunities","Attendee segmentation for follow-up campaigns","Event P&L visibility"])
-INTEGRATION_NOTE = "Third-party integrations are implemented only where the provider's API or documented interface permits it. No portal, marketplace or channel relationship is implied."
+INTEGRATION_NOTE = "Third-party integrations are built only where the provider's API or documented interface allows it. No partnership with any portal, marketplace or channel is implied."
 IND["retail-ecommerce"] = dict(doc="Retail & E-commerce, CRM & Operations Systems | OPSMO", v="RETAIL", name="Retail & E-commerce", img="retail",
  tagline="Storefront, stock and service on the same customer record.",
  intro="We connect commerce platforms, ERP and customer service so orders, inventory and support history stay consistent.",

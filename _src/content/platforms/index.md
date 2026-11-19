@@ -1,7 +1,7 @@
 title: Platforms, Zoho, Salesforce, Odoo, Automation & Analytics | OPSMO
 ---
 ^ PLATFORMS · TECHNOLOGY-INDEPENDENT
-# We implement platforms. We don't sell them.
+# We implement platforms. We don't resell them.
 The platform follows the operating requirement. Where an existing system can support the process, we say so, and architect around it.
 [[Discuss your stack -> /contact]]
 

@@ -15,7 +15,7 @@ It rarely fails technically. It fails because the operating discipline around th
 ### The five controls that prevent it
 **1. Stage exit criteria, agreed before build.** A stage is not a label, it is a checkpoint with evidence: budget confirmed, decision-maker identified, proposal issued. If a deal can sit in a stage without that evidence, the stage is decorative.
 **2. A named owner for change.** One person decides what changes in the system, and there is a written request process. Without this, every reasonable request accumulates into an unreasonable system.
-**3. Change control with a review cadence.** Configuration changes are batched and reviewed , usually monthly , rather than applied reactively. It is the difference between a system that evolves and one that drifts.
+**3. Change control with a review cadence.** Configuration changes are batched and reviewed (usually monthly) rather than applied reactively. It is the difference between a system that evolves and one that drifts.
 **4. Adoption measured, not assumed.** Login counts are not adoption. Measure field completeness on closed deals, activity logged per opportunity, and time-to-first-update on new leads. If those drop, something in the process is fighting the tool.
 **5. A monthly system review.** Thirty minutes on data quality, workflow failures, usage and open requests. It is the cheapest form of prevention available, and it is almost always the first thing to be skipped.
 ### What this changes about implementation

@@ -2,7 +2,7 @@ title: Zoho One Implementation | OPSMO
 img: office
 ---
 ^ PLATFORM · [STACK: ZOHO_ONE]
-# Zoho One: The Operating System for Businesses
+# Zoho One: the operating system for your business
 Zoho One brings sales, customer support, finance, marketing and operations apps into one suite. OPSMO helps you choose which apps to start with, configure them around your processes and roll them out in phases.
 [[Book a Zoho One Consultation -> /book]] [[Explore Zoho One on Zoho -> https://go.zoho.com/9L1]]
 ! OPSMO referral link. OPSMO may earn a commission if you subscribe through this link, at no extra cost to you. Our recommendations are the same either way.
@@ -16,6 +16,16 @@ Three ways teams usually begin. Each engagement starts with the workflow causing
 * Zoho Desk :: Give customer requests a clear owner and a response deadline. Bring tickets into one place, route them to the right team and see where customers are waiting. => EXPLORE ZOHO DESK IMPLEMENTATION -> /solutions/zoho-desk-implementation ;; See Zoho Desk on Zoho -> https://go.zoho.com/yTcH
 [[ZOHO PRODUCT CATALOGUE -> https://go.zoho.com/D8l]]
 ! OPSMO REFERRAL LINKS. OPSMO may earn a commission if you subscribe through a Zoho link on this page, at no extra cost to you. Our recommendations are the same either way.
+
+^ WHY ZOHO ONE
+## One suite. One customer record.
+Zoho positions Zoho One as the operating system for business. These are the platform facts that matter when you compare it with a stack of separate tools.
+@cards4
+* 45+ apps :: Sales, marketing, service, finance, HR, operations and e-commerce on one platform.
+* 1,000+ integrations :: Connect the tools you already run, plus apps from the Zoho Marketplace.
+* One admin console :: Centralised control of users, roles, access and devices.
+* 30-day free trial :: Try it before you commit. We help you decide what to switch on first.
+! Platform facts as published on zoho.com/one (November 2026).
 
 ^ WHY THIS PLATFORM
 ## How OPSMO implements it.

@@ -27,3 +27,13 @@ OUT=. python3 _src/build.py
 ## Before going live
 1. Forms: set `FORM_ENDPOINT` in `assets/js/main.js` (e.g. Formspree) so Contact and Book submissions are received.
 2. Photos are from Unsplash — replace with real OPSMO photos using the same file names in `assets/img/`.
+
+
+## v5 — rebuild (Nov 2026)
+- Whole site moved to the dark "systems boot" identity (Bricolage Grotesque / Geist / Geist Mono), light theme via the toggle or `?theme=light`.
+- New section transition: a fire "seam" scans each section edge, content boots in with a clip reveal; page-to-page uses the View Transitions API.
+- SEO: canonical, Open Graph/Twitter, JSON-LD (ProfessionalService, Person, BreadcrumbList, FAQPage, Article), `sitemap.xml`, `robots.txt`.
+- Conversion: 3-path contact block on every page (call / WhatsApp / assessment), floating WhatsApp button, sticky mobile CTA bar.
+- New `/success-stories/` page; LinkedIn videos load as official embeds on click.
+
+Rebuild: `cd _src && OUT=.. python3 site5.py && cp -r assets ..` (assets live in `_src/assets`).

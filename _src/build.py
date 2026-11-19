@@ -128,7 +128,7 @@ def receive_list():
 def receive_block():
     return sec(head("", "What you receive") + receive_list(), "sec--paper")
 def cases_block(c):
-    return sec(f'<div class="cases rv"><span class="mono acc">CASE STUDIES</span><p>{E(CASES)}</p><a class="btn btn--line btn--sm" {a_attrs(c,"/contact")}>ASK ABOUT RELEVANT EXPERIENCE {ARROW}</a></div>', "sec--tight")
+    return sec(f'<div class="cases rv"><span class="mono acc">SUCCESS STORIES</span><p>PropSpace, Elnaggar &amp; Partners, R1 Performance and Fawry Microfinance: four Zoho One transformations, from spreadsheets and WhatsApp to one operating system.</p><a class="btn btn--line btn--sm" {a_attrs(c,"/success-stories")}>Read the success stories {ARROW}</a></div>', "sec--tight")
 def related_block(c, slugs):
     def tl(s): return SS_TAGLINE if s=="software-selection" else SOL[s]["tagline"]
     cards = "".join(f'<a class="rcard rv" {a_attrs(c,"/solutions/"+s)}><span class="mono acc">[SYSTEM: {SOL_META[s][0]}]</span><h3>{E(SOL_META[s][2])}</h3><p>{E(tl(s))}</p><span class="rcard__go">{ARROW}</span></a>' for s in slugs)
@@ -411,7 +411,7 @@ def render_founder(c):
 <div class="founder__tag"><b>Mohamed Refaat</b><span>FOUNDER &amp; PRINCIPAL CONSULTANT</span></div></div></div></section>
 {sec('<div class="story">' + head("THE STORY","", "A decade inside commercial teams, sales operations and technology, and one conclusion that shaped OPSMO.") + f'<div class="story__body">{story}</div></div>', "sec--paper")}
 {sec(head("ELSEWHERE","Read, verify, connect.") + f'<div class="grid3">{else_}</div>')}
-{sec(head("ZOHO","Zoho product links","The Zoho editions we implement most often. Choose the one that fits your team, we architect and implement from there.") + '<p class="mono acc">OUTBOUND PRODUCT LINKS</p>' + f'<div class="grid4">{zl}</div><p class="fine rv">Referral links: OPSMO may earn a commission if you subscribe through a Zoho link on this page, at no extra cost to you. Our recommendations are the same either way.</p>', "sec--paper")}
+{sec(head("ZOHO","Zoho product links","The Zoho editions we implement most often. Choose the one that fits your team; we architect and implement from there.") + '<p class="mono acc">OUTBOUND PRODUCT LINKS</p>' + f'<div class="grid4">{zl}</div><p class="fine rv">Referral links: OPSMO may earn a commission if you subscribe through a Zoho link on this page, at no extra cost to you. Our recommendations are the same either way.</p>', "sec--paper")}
 {cta_block(c, eyebrow="WORK WITH OPSMO", h="Let's look at how your business actually operates.", p="A short conversation is usually enough to identify where the systems and the process stop matching.")}'''
 
 def opts(xs, placeholder=None):
@@ -460,7 +460,7 @@ def render_book(c):
 <div class="phero__copy">{chip("DISCOVERY CALL · 30–45 MINUTES")}<h1 class="phero__h rv">{em_last("A focused conversation about how your business actually runs.")}</h1>
 <p class="phero__p rv">No pitch deck. We map the current process, identify where the friction is, and tell you honestly whether a system change would help.</p>
 <div class="next rv"><span class="mono acc">WHAT WE'LL COVER</span><ol class="cover">{cover}</ol></div>
-<div class="prefer rv"><b>Not ready for a call?</b><p>Send a written request instead, we'll come back with a scoped recommendation.</p>{btn(c,"Request an assessment","/contact","line",True)}</div></div>
+<div class="prefer rv"><b>Not ready for a call?</b><p>Send a written request instead and we'll come back with a scoped recommendation.</p>{btn(c,"Request an assessment","/contact","line",True)}</div></div>
 <form class="form rv" id="bookForm" novalidate>
 <p class="para">Tell us what you're evaluating or what you'd like to improve. Choose a preferred time and OPSMO will confirm your consultation by email.</p>
 <p class="notice mono">NO CALENDAR PROVIDER IS CONNECTED YET. THE TIME YOU CHOOSE IS A REQUEST, NOT A CONFIRMED SLOT.</p>
@@ -480,7 +480,7 @@ def render_book(c):
 REALITY = [
  ("The CRM is deployed, but the team works around it.","Adoption is a design problem. We rebuild stages, fields and views around how your sellers actually qualify and close."),
  ("Leads arrive from several channels and disappear between them.","We consolidate capture, deduplicate at source, and enforce assignment and response-time rules automatically."),
- ("Manual steps hold the process together, spreadsheets, exports, reminders.","Repetitive routing, approvals, notifications and follow-ups move into governed workflow automation."),
+ ("Spreadsheets, exports and reminders are holding the process together.","Repetitive routing, approvals, notifications and follow-ups move into governed workflow automation."),
  ("Applications don't talk to each other, so data is re-typed.","We design the integration layer: what syncs, in which direction, how conflicts resolve, and how failures are caught."),
  ("Reporting takes days and still doesn't reconcile.","One governed data model with definitions leadership agrees on, then dashboards built on top of it."),
  ("Sales and customer journeys have no clear ownership or stage logic.","We architect the commercial process end to end: pipeline, lifecycle, service levels and handoffs."),
@@ -556,7 +556,7 @@ def render_home(c):
 <div class="founder__copy">{chip("THE FOUNDER")}<h2 class="h2 rv">An operator who knows the software, <em>not a reseller.</em></h2>
 <p class="rv">Mohamed Refaat was the first Egyptian hire at Zoho and the first team member in Zoho Egypt. That experience sits behind every system OPSMO designs: what the platform can do, what it will take to roll out, and where a business is better served by the tools it already owns.</p>
 <p class="mono career__l rv">CAREER ACROSS</p><ul class="career rv">{career}</ul>
-{btns(c,[("Read the founder story","/founder"),("ASK ABOUT RELEVANT EXPERIENCE","/contact")])}</div></div></section>
+{btns(c,[("Read the founder story","/founder"),("See the success stories","/success-stories")])}</div></div></section>
 
 <section class="sec" id="faq"><div class="wrap faq"><div>{chip("FAQ · BEFORE YOU CHOOSE")}<h2 class="h2 rv">{em_last("Questions we hear before a decision.")}</h2><p class="lead rv">How we work before a vendor is chosen, and what to compare beyond the licence price.</p></div>{faq_html(FAQ["choose"])}</div></section>
 {cta_block(c, eyebrow="CONSULTATION", h="Tell us what you're evaluating.", p="Bring the tools you are comparing, or the process that isn't working. We'll tell you what is worth changing and what can stay.")}'''

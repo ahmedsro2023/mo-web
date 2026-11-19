@@ -39,7 +39,7 @@ SOL["crm-migration"] = dict(
  tech=["ZOHO CRM","SALESFORCE","ODOO","DATA MIGRATION TOOLING"],
  summary="A structured migration from an inherited or failing CRM: audit, data mapping, clean rebuild, reconciliation and controlled cutover.",
  scope=["Current-state audit: modules, fields, workflows, integrations and data quality",
-  "Retention analysis, what history must survive and what can be archived",
+  "Retention analysis: what history must survive and what can be archived",
   "Target architecture design and object mapping",
   "Extraction, cleansing, deduplication and identity resolution",
   "Rebuild of pipelines, automation, permissions and reports",
@@ -205,7 +205,7 @@ SOL["managed-crm-operations"] = dict(
  uses=["A company keeps a recently delivered CRM healthy without hiring a full-time administrator.",
   "An operations team routes all system requests through one governed queue.",
   "Leadership receives a monthly review of adoption, data quality and system health."],
- faq=[("Is development included in the retainer?","Support and configuration are included within defined hours. New development, new modules, integrations or applications, is quoted separately. We do not sell unlimited development."),
+ faq=[("Is development included in the retainer?","Support and configuration are included within defined hours. New development — modules, integrations or applications — is quoted separately. We do not sell unlimited development."),
   ("How quickly are issues handled?","Response targets differ by tier and severity, and are set out in the service agreement. Critical production issues are prioritised."),
   ("Can we move between tiers?","Yes. Tiers are reviewed at renewal or when operational demand changes.")],
  related=["software-selection","crm-implementation","crm-migration"])
