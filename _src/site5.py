@@ -90,9 +90,9 @@ def zoho_refs(c):
              ("crm","Zoho CRM","Pipeline, automation and forecasting for sales teams.",'<span class="zc__mark">CRM</span>'),
              ("desk","Zoho Desk","Support tickets, service levels and customer history.",'<span class="zc__mark">Desk</span>'),
              ("all","Zoho.com","Browse the full Zoho product catalogue.",'<span class="zc__mark">All</span>')]
-    z = "".join(f'<a class="zc rv" href="{ZOHO[k]}" target="_blank" rel="noopener sponsored">{m}<h3>{E(t)}</h3><p>{E(d)}</p><span class="mono">Open Zoho {EXT}</span></a>' for k, t, d, m in cards)
-    return sec(f'''<div class="head head--split"><div>{chip("Zoho references")}<h2 class="h2 rv">Start with the edition <em>that fits your team.</em></h2></div><p class="lead rv">The Zoho editions we implement most often. Pick one — we architect and implement from there.</p></div>
-<div class="zcards">{z}</div><p class="fine rv">Referral links: OPSMO may earn a commission if you subscribe through a Zoho link on this page, at no extra cost to you. Our recommendations are the same either way.</p>''')
+    z = "".join(f'<a class="zc rv" href="{ZOHO[k]}" target="_blank" rel="noopener sponsored">{m}<h3>{E(t)}</h3><p>{E(d)}</p><span class="mono">Start free trial {EXT}</span></a>' for k, t, d, m in cards)
+    return sec(f'''<div class="head head--split"><div>{chip("Zoho references")}<h2 class="h2 rv">Start with the edition <em>that fits your team.</em></h2></div><p class="lead rv">Start a free trial on Zoho, then let us set it up properly. Not sure which edition fits? Ask before you subscribe.</p></div>
+<div class="zcards">{z}</div><div class="btnrow center">{btn(c,"Help me choose an edition","/book")}</div><p class="fine rv">Referral links: OPSMO may earn a commission if you subscribe through a Zoho link on this page, at no extra cost to you. Our recommendations are the same either way.</p>''')
 
 def contact_paths(c, eyebrow="Next step", h="Tell us what you're evaluating.", p="Bring the tools you're comparing, or the process that isn't working. We'll tell you what is worth changing — and what can stay."):
     return f'''<section class="ctax" id="contact-paths"><div class="ctax__glow" aria-hidden="true"></div><div class="wrap">
@@ -135,11 +135,11 @@ def render_home(c):
     return f'''
 <section class="hero5"><div class="hero5__aura" aria-hidden="true"></div>
 <div class="wrap hero5__grid"><div class="hero5__copy">
-<p class="chip">Business transformation · Dubai since 2009</p>
-<h1 class="hero5__h" data-split>Your business doesn't need more software. <span class="fire">It needs systems that work.</span></h1>
-<p class="hero5__p" data-in>OPSMO designs, implements and runs the Zoho systems behind sales, customer support and daily operations for businesses across the UAE and GCC. It is led by Mohamed Refaat — the first Egyptian hire at Zoho, with two stints inside Property Finder Group.</p>
-<div class="btnrow" data-in>{btn(c,"Book a free consultation","/book")}<a class="btn btn--line" href="{WA}" target="_blank" rel="noopener"><i class="dot"></i>WhatsApp Mohamed</a></div>
-<div class="hero5__ex" data-in><span class="mono dim">Former</span><a class="ex ex--zoho" href="#zoho">Zoho</a><a class="ex" href="#career">Property Finder</a><a class="ex" href="#career">PropSpace</a><a class="ex" href="#career">Motivate Media Group</a></div>
+<p class="chip">Zoho One &amp; CRM · Dubai</p>
+<h1 class="hero5__h" data-split>Business systems <span class="fire">that work.</span></h1>
+<p class="hero5__p" data-in>Zoho, implemented by Zoho's first Egyptian hire.</p>
+<div class="btnrow" data-in>{btn(c,"Book a free consultation","/book")}<a class="btn btn--line" href="{WA}" target="_blank" rel="noopener"><i class="dot"></i>WhatsApp</a></div>
+<div class="hero5__ex" data-in><span class="mono dim">Ex</span><a class="ex ex--zoho" href="#zoho">Zoho</a><a class="ex" href="#career">Property Finder</a><a class="ex" href="#career">PropSpace</a><a class="ex" href="#career">Motivate</a></div>
 </div>
 <figure class="portrait" id="portrait"><img class="portrait__bg" src="{c.asset("img/zoho-tower.webp")}" alt="" fetchpriority="high"><div class="portrait__shade"></div>
 <img class="portrait__cut" src="{c.asset("img/founder-cut.webp")}" alt="Mohamed Refaat, founder of OPSMO, in front of the Zoho tower" fetchpriority="high" width="820" height="979"></figure>
@@ -148,14 +148,14 @@ def render_home(c):
 <section class="zchap" id="zoho" aria-label="Zoho experience"><div class="zchap__pin"><img class="zchap__bg" src="{c.asset("img/zoho-tower.webp")}" alt="" loading="lazy"><div class="zchap__veil"></div>
 <div class="wrap zchap__in"><p class="chip chip--zoho">Where the experience comes from</p>
 <h2 class="zchap__word" aria-label="Zoho"><span>Z</span><span>o</span><span>h</span><span>o</span><em>.</em></h2>
-<p class="zchap__lead">Zoho hired Mohamed in Dubai and relocated him to Egypt as its first Egyptian employee. He helped build the market from the inside — which is why OPSMO implements Zoho as an operator, not a reseller.</p>
+<p class="zchap__lead">Hired by Zoho in Dubai. Its first employee in Egypt. Now building Zoho systems for UAE and GCC teams.</p>
 <ol class="zchap__facts"><li><b>First</b><span>Egyptian hire at Zoho</span></li><li><b>First</b><span>team member in Zoho Egypt</span></li><li><b>500+</b><span>organisations advised while building Zoho's presence in Egypt</span></li><li><b>50%</b><span>growth in customer acquisition and annual revenue he contributed to</span></li></ol>
-<div class="btnrow"><a class="btn btn--fire" href="{ZOHO["one"]}" target="_blank" rel="noopener sponsored">Explore Zoho One {EXT}</a><a class="btn btn--line" href="{UAE_STORIES}" target="_blank" rel="noopener">Read the UAE Stories feature {EXT}</a></div></div>
+<div class="btnrow">{btn(c,"How we implement Zoho One","/platforms/zoho")}<a class="btn btn--line" href="{UAE_STORIES}" target="_blank" rel="noopener">His story on UAE Stories {EXT}</a></div></div>
 <div class="zchap__rail" aria-hidden="true"><span id="zRail"></span></div></div></section>
 
 {sec(f"""<div class="head">{chip("Track record")}<h2 class="h2 rv">Built inside the companies <em>that shaped UAE tech.</em></h2><p class="lead rv">Seventeen years across sales, business development, commercial operations and CRM — at the platform, the portal and the media group. Every claim links to where you can check it.</p></div>
 <div class="bento">
-<a class="bt bt--zoho rv" href="{ZOHO["all"]}" target="_blank" rel="noopener sponsored"><div class="bt__logo">{logo(c,"zohoone-w","Zoho One")}</div><span class="bt__k mono">Zoho · Egypt</span><h3>The platform</h3><p>First Egyptian hire and first team member in Zoho Egypt. Advised 500+ organisations while helping build the market.</p><span class="bt__go mono">zoho.com {EXT}</span></a>
+<a class="bt bt--zoho rv" {a_attrs(c,"/platforms/zoho")}><div class="bt__logo">{logo(c,"zohoone-w","Zoho One")}</div><span class="bt__k mono">Zoho · Egypt</span><h3>The platform</h3><p>First Egyptian hire and first team member in Zoho Egypt. Advised 500+ organisations while helping build the market.</p><span class="bt__go mono">Zoho One implementation {ARROW}</span></a>
 <a class="bt bt--pf rv" href="https://www.propertyfinder.ae/" target="_blank" rel="noopener"><div class="bt__logo">{logo(c,"propertyfinder-w","Property Finder")}</div><span class="bt__k mono">Property Finder Group · twice</span><h3>The portal</h3><div class="bt__stats"><div><b><span data-count="300">300</span>+</b><span>UAE real-estate accounts managed</span></div><div><b><span data-count="164">164</span>%</b><span>retention revenue growth in Q1</span></div></div><span class="bt__go mono">propertyfinder.ae {EXT}</span></a>
 <a class="bt bt--ps rv" href="https://www.propspace.com/about" target="_blank" rel="noopener"><div class="bt__logo">{logo(c,"propspace-w","PropSpace")}</div><span class="bt__k mono">Post-acquisition transformation</span><p>Moved PropSpace from Property Finder's Salesforce environment to an integrated Zoho One operating model.</p><div class="bt__stats"><div><b><span data-count="150">150</span>+</b><span>UAE companies</span></div><div><b><span data-count="40">40</span>%</b><span>less manual effort</span></div></div><span class="bt__go mono">propspace.com {EXT}</span></a>
 <a class="bt bt--mm rv" href="https://www.motivatemedia.com/" target="_blank" rel="noopener"><div class="bt__word">Motivate<br>Media Group</div><span class="bt__k mono">Media · events</span><p>Commercial work inside one of the UAE's best-known media and events groups.</p><span class="bt__go mono">motivatemedia.com {EXT}</span></a>
@@ -208,7 +208,7 @@ def cta_block(c, key="default", eyebrow=None, h=None, p=None, pairs=None):
 def nav_html(c):
     old = B._orig_nav(c)
     old = old.replace(f'src="{c.asset("img/logo.png")}"', f'src="{c.asset("img/opsmo-logo.png")}"').replace(f'src="{c.asset("img/logo-white.png")}"', f'src="{c.asset("img/opsmo-logo-w.png")}"')
-    old = old.replace('width="320" height="48"', 'width="700" height="120"')
+    old = old.replace('width="320" height="48"', 'width="1400" height="243"')
     old = old.replace(f'<a class="nav__a" {a_attrs(c,"/insights")}>Insights</a>', f'<a class="nav__a" {a_attrs(c,"/success-stories")}>Success Stories</a><a class="nav__a" {a_attrs(c,"/insights")}>Insights</a>')
     old = old.replace(f'<a class="sheet__a" {a_attrs(c,"/insights")}>Insights</a>', f'<a class="sheet__a" {a_attrs(c,"/success-stories")}>Success Stories</a><a class="sheet__a" {a_attrs(c,"/insights")}>Insights</a>')
     old = old.replace(f'<a class="btn btn--fire btn--sm nav__cta" {a_attrs(c,"/book")}>Book a Consultation {ARROW}</a>', f'<a class="btn btn--fire btn--sm nav__cta" {a_attrs(c,"/book")}>Book a Call {ARROW}</a>')
@@ -228,7 +228,7 @@ def footer_html(c):
     services = [("/solutions","All Solutions")] + [("/solutions/"+s, SOL_META[s][2]) for s in SOL_ORDER]
     explore = [("/platforms/zoho","Zoho One Implementation"),("/platforms","Platforms"),("/industries","Industry Solutions"),("/success-stories","Success Stories"),("/insights","Insights"),(UAE_STORIES,"UAE Stories Feature"),(ZOHO["all"],"Zoho Products")]
     return f'''<footer class="ft"><div class="wrap">
-<div class="ft__top"><div class="ft__brand"><a {a_attrs(c,"/")} aria-label="OPSMO home"><img class="logo-l" src="{c.asset("img/opsmo-logo.png")}" alt="opsmo.tech" width="700" height="120" loading="lazy"><img class="logo-d" src="{c.asset("img/opsmo-logo-w.png")}" alt="" width="700" height="120" loading="lazy"></a>
+<div class="ft__top"><div class="ft__brand"><a {a_attrs(c,"/")} aria-label="OPSMO home"><img class="logo-l" src="{c.asset("img/opsmo-logo.png")}" alt="opsmo.tech" width="1400" height="243" loading="lazy"><img class="logo-d" src="{c.asset("img/opsmo-logo-w.png")}" alt="" width="1400" height="243" loading="lazy"></a>
 <p class="ft__tag">Systems that work.</p><p>Zoho implementation, integration and commercial operations for ambitious teams across the UAE and GCC — led by Zoho's first Egyptian hire.</p>
 <div class="ft__soc"><a href="{LINKEDIN}" target="_blank" rel="noopener" aria-label="LinkedIn">{SOC["li"]}</a><a href="{WA}" target="_blank" rel="noopener" aria-label="WhatsApp">{SOC["wa"]}</a><a href="tel:+{PHONE_RAW}" aria-label="Call">{SOC["ph"]}</a></div>
 <a class="ft__badge" href="{UAE_STORIES}" target="_blank" rel="noopener"><img src="{c.asset("img/logos/uaestories.png")}" alt="UAE Stories" loading="lazy"><span>Featured: how Mohamed Refaat built smarter businesses across the UAE ↗</span></a></div>
@@ -247,7 +247,7 @@ def footer_html(c):
 # ------------------------------------------------------------------ SEO head
 def jsonld(c, title, desc, route, body):
     org = {"@context":"https://schema.org","@type":"ProfessionalService","@id":SITE+"/#org","name":"OPSMO","alternateName":"opsmo.tech","url":SITE+"/",
-           "logo":SITE+"/assets/img/opsmo-logo.png","image":SITE+"/assets/img/zoho-tower.webp","description":DEFAULT_DESC,"telephone":"+"+PHONE_RAW,
+           "logo":SITE+"/assets/img/icon-512.png","image":SITE+"/assets/img/zoho-tower.webp","description":DEFAULT_DESC,"telephone":"+"+PHONE_RAW,
            "areaServed":["United Arab Emirates","Saudi Arabia","Qatar","Kuwait","Oman","Bahrain","Egypt"],"address":{"@type":"PostalAddress","addressLocality":"Dubai","addressCountry":"AE"},
            "founder":{"@type":"Person","@id":SITE+"/founder/#person","name":"Mohamed Refaat","jobTitle":"Founder & Principal Consultant","sameAs":[LINKEDIN, UAE_STORIES],
                       "alumniOf":[{"@type":"Organization","name":"Zoho"},{"@type":"Organization","name":"Property Finder"}]},
@@ -293,9 +293,8 @@ def page(c, title, body, desc=None, route="/"):
 <meta name="geo.region" content="AE-DU"><meta name="geo.placename" content="Dubai">
 <meta name="theme-color" content="#050506"><meta name="view-transition" content="same-origin">
 {THEME_BOOT}
-<link rel="icon" href="{c.asset("img/mark.png")}" type="image/png"><link rel="apple-touch-icon" href="{c.asset("img/mark.png")}">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Geist:wght@300..700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" href="{c.asset("img/mark.png")}" type="image/png" sizes="64x64"><link rel="icon" href="{c.asset("../favicon.ico")}" sizes="any"><link rel="apple-touch-icon" href="{c.asset("img/apple-touch-icon.png")}">
+<link rel="preload" href="{c.asset("fonts/sora-latin-wght-normal.woff2")}" as="font" type="font/woff2" crossorigin><link rel="preload" href="{c.asset("fonts/geist-latin-wght-normal.woff2")}" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="{c.asset("css/style.css")}"><link rel="stylesheet" href="{c.asset("css/v5.css")}">
 {jsonld(c, title, desc, route, body)}
 </head>
@@ -305,7 +304,8 @@ def page(c, title, body, desc=None, route="/"):
 <main id="main">{body}</main>
 {footer_html(c)}
 {B.SPRITE}
-<script src="{c.asset("js/main.js")}" defer></script><script src="{c.asset("js/v5.js")}" defer></script>
+<canvas class="globe" id="globe" aria-hidden="true"></canvas>
+<script src="{c.asset("js/main.js")}" defer></script><script src="{c.asset("js/v5.js")}" defer></script><script src="{c.asset("js/globe.js")}" defer></script>
 </body></html>'''
 
 # ------------------------------------------------------------------ wire up + build

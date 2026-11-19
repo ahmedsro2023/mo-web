@@ -37,3 +37,10 @@ OUT=. python3 _src/build.py
 - New `/success-stories/` page; LinkedIn videos load as official embeds on click.
 
 Rebuild: `cd _src && OUT=.. python3 site5.py && cp -r assets ..` (assets live in `_src/assets`).
+
+## v5.1
+- Display type: Sora (self-hosted with Geist / Geist Mono in `assets/fonts`, no Google Fonts call).
+- Scroll globe (`assets/js/globe.js`): half an earth of land dots turns behind the page as you scroll, with live links from Dubai to the GCC and Cairo.
+- Blocks lift in vertically (rise + un-tilt) as they enter.
+- Official capsule logo + new square app icon (`icon-512.png`, `apple-touch-icon.png`, `favicon.ico`).
+- Primary buttons keep visitors on the site (book / WhatsApp / assessment); Zoho referral links are secondary and open in a new tab.
