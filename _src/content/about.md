@@ -1,28 +1,25 @@
-title: About OPSMO, Commercial Operations & Digital Transformation
+title: About OPSMO & Founder Mohamed Refaat — Ex-Zoho, Dubai | OPSMO
 img: workshop
 ---
-^ ABOUT OPSMO · COMMERCIAL OPERATIONS · DIGITAL TRANSFORMATION
-# We don't start with software. We start with how your business operates.
-OPSMO is a commercial operations and digital transformation company. We understand the business, design its operating architecture, implement the right systems, connect its processes and support continuous improvement.
+^ ABOUT OPSMO
+# We start with how your business works. Then we pick the software.
+OPSMO is a Dubai company that designs, builds and runs the systems behind sales, customer service and daily operations. It was founded by Mohamed Refaat, Zoho's first Egyptian hire.
+[[Book a free consultation -> /book]] [[Read Mohamed's story -> #founder]]
 
-^ WHAT WE ARE
-## An operating partner, not a vendor in the middle.
+^ WHAT WE DO
+## A partner who stays after launch.
 @split
-Our responsibility extends beyond recommending technology. We are accountable for whether the system changes how the business performs.
-Most businesses don't have a software problem. They have an operating problem that software was expected to solve on its own. Systems are bought, installed and licensed, then the process around them is left unchanged.
-OPSMO works the other way. We map how the business actually runs, define the target operating model, and only then decide what technology, configuration and integration is required to support it.
+We are judged by one thing: does the system change how your business performs?
+Most businesses don't have a software problem. They have a process problem that new software was expected to fix on its own. The software gets bought and installed, and the way people work stays the same.
+We do it the other way round. First we map how your business really runs. Then we agree how it should run. Only then do we decide which software, settings and integrations you need.
 > Business first. Systems second. Results always.
 
-^ POSITIONING
-## What we are not.
+^ WHAT WE ARE NOT
+## Four things you won't get from us.
 @cards4
-* Not a software reseller :: We are not paid to move licences. The recommendation follows the operating requirement, and we will say when the current system is enough.
-* Not a generic consultancy :: We don't hand over a strategy deck and leave. Design and implementation are delivered by the same team that operates the result.
-* Not an implementation shop :: A configuration delivered and abandoned is a cost, not a capability. Our engagements include adoption, governance and optimisation.
-* One operating partner :: Sales, service, operations, finance and reporting considered together, because a business doesn't run in separate systems.
-
-^ LEADERSHIP
-## Who you work with.
-{{leader}}
+* Not a software reseller :: We are not paid to sell licences. If the system you have is enough, we tell you.
+* Not a slide-deck consultancy :: We don't hand over a strategy and leave. The same team designs, builds and supports your system.
+* Not a one-off setup shop :: A setup that nobody maintains becomes a cost. Training, support and improvement are part of the work.
+* One partner for everything :: Sales, service, operations, finance and reporting are planned together, because your business doesn't run in separate boxes.
 
 {{cta:default}}

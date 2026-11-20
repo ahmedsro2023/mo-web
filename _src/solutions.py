@@ -49,7 +49,7 @@ SOL["crm-migration"] = dict(
  uses=["A company moves from a heavily customised legacy CRM to a maintainable standard architecture.",
   "Two regional teams on different systems consolidate into one governed commercial database.",
   "An inherited implementation is rebuilt without losing ten years of account history."],
- faq=[("Will we lose historical records?","Not by default. We define what must remain queryable in the new system and archive the rest in a structured, retrievable form. Nothing is deleted without written approval."),
+ faq=[("Will we lose historical records?","Not by default. We define what must stay searchable in the new system and archive the rest in a structured, retrievable form. Nothing is deleted without written approval."),
   ("How is downtime handled?","The legacy system stays live until reconciliation passes. Cutover happens inside an agreed freeze window, usually a weekend, with a tested rollback point."),
   ("Can you migrate a CRM another partner built?","Yes, that is a common starting point. We document what exists, keep what supports the operating model, and rebuild the rest.")],
  related=["software-selection","crm-implementation","business-process-automation"])

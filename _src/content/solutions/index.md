@@ -1,21 +1,21 @@
-title: Solutions, CRM, Automation, Integration & Analytics | OPSMO
+title: Solutions — CRM, Zoho, Automation, Integration & BI | OPSMO
 ---
-^ SOLUTIONS · 10 DISCIPLINES
-# The systems behind commercial performance.
-Each solution is an operating capability, not a licence sale. Scope, methodology and deliverables are defined before build begins.
-[[Request an Operational Assessment -> /contact]]
+^ SOLUTIONS
+# Ten services. One goal: systems your team actually uses.
+Pick the problem you want to fix. Every project has a clear scope, method and price before work starts.
+[[Book a free consultation -> /book]] [[Request an assessment -> /contact]]
 
 ## 
 @cards3
-* [SYSTEM: SELECTION] 01 · Software Selection :: A structured evaluation of the software you are considering: requirements, shortlist, the full cost, integration, a user pilot and a phased rollout plan. -> /solutions/software-selection
-* [SYSTEM: CRM_ARCHITECTURE] 02 · CRM Implementation & Architecture :: We design the data model, pipeline, permissions and adoption path, then implement and roll out the CRM your commercial team will actually use. -> /solutions/crm-implementation
-* [SYSTEM: MIGRATION] 03 · CRM Migration & Reimplementation :: A structured migration from an inherited or failing CRM: audit, data mapping, clean rebuild, reconciliation and controlled cutover. -> /solutions/crm-migration
-* [SYSTEM: WORKFLOW] 04 · Business Process Automation :: Routing, approvals, notifications, task creation and follow-ups designed as governed workflows with error handling and monitoring. -> /solutions/business-process-automation
-* [SYSTEM: INTEGRATION] 05 · API & Systems Integration :: We connect CRM, ERP, finance, websites, marketing and communication platforms so records stay consistent without re-typing. -> /solutions/api-systems-integration
-* [SYSTEM: REVOPS] 06 · Commercial & Revenue Operations :: Sales process architecture, pipeline governance, customer lifecycle design and the visibility leadership needs to run the commercial engine. -> /solutions/commercial-revenue-operations
-* [SYSTEM: ANALYTICS] 07 · Business Intelligence & Reporting :: Governed data models, automated reporting and management dashboards built on KPI definitions the business has agreed to. -> /solutions/business-intelligence-reporting
-* [SYSTEM: TRANSFORMATION] 08 · Digital Transformation :: Multi-application transformation with architecture, governance and phased delivery across departments. -> /solutions/digital-transformation
-* [SYSTEM: OPERATE] 09 · Managed CRM & Digital Operations :: Administration, support, monitoring, optimisation and continuous improvement delivered as a monthly retainer. -> /solutions/managed-crm-operations
-* [SYSTEM: ZOHO_DESK] 10 · Zoho Desk Implementation :: We set up Zoho Desk so requests from every support channel land with the right team, with response targets, a help centre and customer history from Zoho CRM. -> /solutions/zoho-desk-implementation
+* 01 · Software Selection :: Compare the real options before you buy: requirements, shortlist, full cost, integrations, a user test and a rollout plan. -> /solutions/software-selection
+* 02 · CRM Implementation :: We design and set up the CRM, then train your team so they actually use it. -> /solutions/crm-implementation
+* 03 · CRM Migration :: Move from an old or broken CRM without losing history, owners or trust in the data. -> /solutions/crm-migration
+* 04 · Process Automation :: Automate assignment, approvals, reminders and follow-ups, with alerts when something fails. -> /solutions/business-process-automation
+* 05 · API & Systems Integration :: Connect CRM, ERP, finance, website and marketing tools so nobody re-types data. -> /solutions/api-systems-integration
+* 06 · Sales & Revenue Operations :: Clear sales process, pipeline rules and the view leadership needs to run revenue. -> /solutions/commercial-revenue-operations
+* 07 · Reports & Dashboards (BI) :: Dashboards built on KPIs everyone agrees on, updating on their own. -> /solutions/business-intelligence-reporting
+* 08 · Digital Transformation :: A phased plan across departments and apps, delivered step by step. -> /solutions/digital-transformation
+* 09 · Monthly CRM Support :: Monthly admin, support, monitoring and improvements after launch. -> /solutions/managed-crm-operations
+* 10 · Zoho Desk Implementation :: Every support request lands with the right team, with response targets, a help centre and full customer history. -> /solutions/zoho-desk-implementation
 
 {{cta:default}}

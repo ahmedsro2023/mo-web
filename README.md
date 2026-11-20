@@ -44,3 +44,10 @@ Rebuild: `cd _src && OUT=.. python3 site5.py && cp -r assets ..` (assets live in
 - Blocks lift in vertically (rise + un-tilt) as they enter.
 - Official capsule logo + new square app icon (`icon-512.png`, `apple-touch-icon.png`, `favicon.ico`).
 - Primary buttons keep visitors on the site (book / WhatsApp / assessment); Zoho referral links are secondary and open in a new tab.
+
+## v6 (Nov 2026) — 27 pages
+- Merged: About + Founder → `/about`, Approach + Packages → `/approach` (How We Work), Managed Services → `/solutions/managed-crm-operations#retainers`, Book + Contact → `/contact`, six industries → `/industries` (tabs), Salesforce/Odoo/Automation/Analytics → `/platforms`.
+- `/industries/real-estate` rebuilt as the flagship sector page.
+- Old URLs keep working: redirect pages in the old folders (GitHub Pages) + 301s in `vercel.json` (Vercel).
+- Forms: until `FORM_ENDPOINT` is set in `assets/js/main.js`, submissions open WhatsApp with the filled-in details.
+- Rebuild: `cd _src && OUT=.. python3 site5.py && cp -r assets favicon.ico ..` (videos live in `/assets/video`, not in `_src`).

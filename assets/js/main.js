@@ -236,7 +236,16 @@
   };
   const send = async (form, okMsg) => {
     const msg = $('.form__msg', form);
-    if (!FORM_ENDPOINT) { msg.className = 'form__msg err'; msg.textContent = "This form isn't connected yet — add a form endpoint in assets/js/main.js."; return; }
+    if (!FORM_ENDPOINT) {
+      // No form backend yet: send the request through WhatsApp so no lead is lost.
+      const lines = [];
+      $$('input, select, textarea', form).forEach(i => { if (!i.name || !i.value.trim()) return;
+        const l = form.querySelector(`label[for="${i.id}"]`); lines.push(`${(l ? l.textContent : i.name).replace(/\s*\*$/, '').trim()}: ${i.value.trim()}`); });
+      const title = form.id === 'bookForm' ? 'Call request' : 'Assessment request';
+      window.open('https://wa.me/971585964224?text=' + encodeURIComponent(`Hi OPSMO, ${title.toLowerCase()} from the website:\n\n` + lines.join('\n')), '_blank', 'noopener');
+      msg.className = 'form__msg ok'; msg.textContent = 'Opening WhatsApp with your details. Press send there and we will reply directly.';
+      return;
+    }
     msg.className = 'form__msg'; msg.textContent = 'Sending…';
     try {
       const fd = new FormData(form); fd.append('page', location.pathname);

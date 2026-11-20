@@ -1,10 +1,10 @@
 title: Software Selection | OPSMO
 img: workshop
 ---
-^ SOLUTION · [SYSTEM: SELECTION]
+^ SOFTWARE SELECTION
 # From software shortlist to a decision your team can stand behind.
 Choosing software takes time. Your team has to agree on what it needs, attend demos, compare pricing, test integrations and work out who will run the system after launch. OPSMO helps you see which option fits, what it will cost and what it takes to roll out.
-[[Book a Software Selection Consultation -> /book]] [[See how we implement -> /solutions/crm-implementation]]
+[[Book a consultation -> /book]] [[See how we implement -> /solutions/crm-implementation]]
 
 ^ THE SIX STAGES
 ## Each stage ends with something written down.
@@ -25,4 +25,4 @@ How we help before a vendor is chosen, and what to compare beyond the licence pr
 ## Bring the shortlist you are already reviewing.
 @dark
 We will help you compare it on the same terms, price the first year properly and agree what the decision needs to answer.
-[[Book a Software Selection Consultation -> /book]] [[Request an Operational Assessment -> /contact]]
+[[Book a consultation -> /book]] [[Request an assessment -> /contact]]

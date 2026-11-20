@@ -222,13 +222,20 @@ def cta_block(c, key="default", eyebrow=None, h=None, p=None, pairs=None):
 
 # ------------------------------------------------------------------ nav & footer
 def nav_html(c):
-    old = B._orig_nav(c)
-    old = old.replace(f'src="{c.asset("img/logo.png")}"', f'src="{c.asset("img/opsmo-logo.png")}"').replace(f'src="{c.asset("img/logo-white.png")}"', f'src="{c.asset("img/opsmo-logo-w.png")}"')
-    old = old.replace('width="320" height="48"', 'width="1400" height="243"')
-    old = old.replace(f'<a class="nav__a" {a_attrs(c,"/insights")}>Insights</a>', f'<a class="nav__a" {a_attrs(c,"/success-stories")}>Success Stories</a><a class="nav__a" {a_attrs(c,"/insights")}>Insights</a>')
-    old = old.replace(f'<a class="sheet__a" {a_attrs(c,"/insights")}>Insights</a>', f'<a class="sheet__a" {a_attrs(c,"/success-stories")}>Success Stories</a><a class="sheet__a" {a_attrs(c,"/insights")}>Insights</a>')
-    old = old.replace(f'<a class="btn btn--fire btn--sm nav__cta" {a_attrs(c,"/book")}>Book a Consultation {ARROW}</a>', f'<a class="btn btn--fire btn--sm nav__cta" {a_attrs(c,"/book")}>Book a Call {ARROW}</a>')
-    return old
+    sols = "".join(f'<a {a_attrs(c,"/solutions/"+x)}><b>{E(SOL_META[x][2])}</b><span>{E(B.SS_TAGLINE if x=="software-selection" else (SOL[x]["tagline"] if x in SOL else "Give every customer request a clear owner."))}</span></a>' for x in SOL_ORDER)
+    main = [("/platforms/zoho","Zoho One"),("/industries","Industries"),("/success-stories","Success Stories"),("/approach","How We Work"),("/about","About")]
+    links = (f'''<div class="dd"><button class="dd__btn" aria-expanded="false">Solutions<svg class="i" aria-hidden="true"><use href="#i-down"/></svg></button>
+<div class="dd__menu dd__menu--wide"><div class="dd__grid">{sols}</div><a class="dd__all mono" {a_attrs(c,"/solutions")}>All solutions {ARROW}</a></div></div>''' +
+             "".join(f'<a class="nav__a" {a_attrs(c,u)}>{n}</a>' for u, n in main))
+    sheet = (f'<details><summary>Solutions</summary>' + "".join(f'<a {a_attrs(c,"/solutions/"+x)}>{E(SOL_META[x][2])}</a>' for x in SOL_ORDER) + f'<a class="mono" {a_attrs(c,"/solutions")}>All solutions</a></details>' +
+             "".join(f'<a class="sheet__a" {a_attrs(c,u)}>{n}</a>' for u, n in main + [("/insights","Insights"),("/contact","Contact")]) + btn(c,"Book a Call","/book"))
+    return f'''<header class="nav" id="nav"><div class="nav__bar">
+<a {a_attrs(c,"/")} class="nav__logo" aria-label="OPSMO home"><img class="logo-l" src="{c.asset("img/opsmo-logo.png")}" alt="opsmo.tech" width="1400" height="243"><img class="logo-d" src="{c.asset("img/opsmo-logo-w.png")}" alt="" width="1400" height="243"></a>
+<nav class="nav__links" aria-label="Primary">{links}</nav>
+<button class="theme" id="themeBtn" type="button" aria-label="Switch theme"><svg class="i i--sun" aria-hidden="true"><use href="#i-sun"/></svg><svg class="i i--moon" aria-hidden="true"><use href="#i-moon"/></svg></button>
+<a class="btn btn--fire btn--sm nav__cta" {a_attrs(c,"/book")}>Book a Call {ARROW}</a>
+<button class="nav__burger" id="burger" aria-label="Open menu" aria-expanded="false"><i></i><i></i></button></div>
+<div class="nav__sheet" id="sheet">{sheet}</div></header>'''
 
 SOC = {
  "li": '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM9 9h3.8v1.7h.06c.53-1 1.84-2.06 3.8-2.06C20.6 8.64 21 11.2 21 14.5V21h-4v-5.7c0-1.36-.02-3.1-1.9-3.1-1.9 0-2.2 1.48-2.2 3V21H9z"/></svg>',
@@ -240,12 +247,12 @@ def footer_html(c):
     def col(title, items):
         lis = "".join(f'<a {a_attrs(c,u)}>{E(n)}{"<span aria-hidden=true> ↗</span>" if u.startswith("http") else ""}</a>' for u, n in items)
         return f'<div class="ft__col"><h3 class="ft__h">{title}</h3>{lis}</div>'
-    company = [("/about","About OPSMO"),("/founder","The Founder"),("/approach","Our Methodology"),("/packages","Implementation Packages"),("/managed-services","Managed Services"),(LI_RECS,"Client Recommendations"),("/contact","Contact Us")]
+    company = [("/about","About OPSMO"),("/about#founder","Mohamed Refaat, Founder"),("/approach","How We Work"),("/approach#packages","Packages"),("/solutions/managed-crm-operations#retainers","Monthly Support"),(LI_RECS,"Client Recommendations"),("/contact","Contact Us")]
     services = [("/solutions","All Solutions")] + [("/solutions/"+s, SOL_META[s][2]) for s in SOL_ORDER]
-    explore = [("/platforms/zoho","Zoho One Implementation"),("/platforms","Platforms"),("/industries","Industry Solutions"),("/success-stories","Success Stories"),("/insights","Insights"),(UAE_STORIES,"UAE Stories Feature"),(ZOHO["all"],"Zoho Products")]
+    explore = [("/platforms/zoho","Zoho One Implementation"),("/industries/real-estate","Zoho for Real Estate"),("/industries","Industries"),("/platforms","Salesforce, Odoo & BI"),("/success-stories","Success Stories"),("/insights","Insights"),(UAE_STORIES,"UAE Stories Feature"),(ZOHO["all"],"Zoho Products")]
     return f'''<footer class="ft"><div class="wrap">
 <div class="ft__top"><div class="ft__brand"><a {a_attrs(c,"/")} aria-label="OPSMO home"><img class="logo-l" src="{c.asset("img/opsmo-logo.png")}" alt="opsmo.tech" width="1400" height="243" loading="lazy"><img class="logo-d" src="{c.asset("img/opsmo-logo-w.png")}" alt="" width="1400" height="243" loading="lazy"></a>
-<p class="ft__tag">Systems that work.</p><p>Zoho implementation, integration and commercial operations for ambitious teams across the UAE and GCC — led by Zoho's first Egyptian hire.</p>
+<p class="ft__tag">Systems that work.</p><p>We set up and run Zoho for sales, service and operations teams across the UAE and GCC. Led by Zoho's first Egyptian hire.</p>
 <div class="ft__soc"><a href="{LINKEDIN}" target="_blank" rel="noopener" aria-label="LinkedIn">{SOC["li"]}</a><a href="{WA}" target="_blank" rel="noopener" aria-label="WhatsApp">{SOC["wa"]}</a><a href="tel:+{PHONE_RAW}" aria-label="Call">{SOC["ph"]}</a></div>
 <a class="ft__badge" href="{UAE_STORIES}" target="_blank" rel="noopener"><img src="{c.asset("img/logos/uaestories.png")}" alt="UAE Stories" loading="lazy"><span>Featured: how Mohamed Refaat built smarter businesses across the UAE ↗</span></a></div>
 <div class="ft__cols">{col("Company", company)}{col("Solutions", services)}{col("Explore", explore)}
@@ -324,6 +331,162 @@ def page(c, title, body, desc=None, route="/"):
 <script src="{c.asset("js/main.js")}" defer></script><script src="{c.asset("js/v5.js")}" defer></script><script src="{c.asset("js/globe.js")}" defer></script>
 </body></html>'''
 
+
+# ================================================================== v6: merged structure
+REDIR = {
+ "/founder": "/about#founder", "/book": "/contact#book", "/packages": "/approach#packages",
+ "/managed-services": "/solutions/managed-crm-operations#retainers",
+ "/platforms/salesforce": "/platforms#salesforce", "/platforms/odoo": "/platforms#odoo",
+ "/platforms/analytics": "/platforms#analytics-bi", "/platforms/automation-integration": "/platforms#automation-integration",
+}
+for _s in IND_ORDER:
+    if _s != "real-estate": REDIR["/industries/" + _s] = "/industries#" + _s
+_orig_href = Ctx.href
+def _href(self, target):
+    if not re.match(r"^(https?:|mailto:|tel:|#)", target):
+        path, _, frag = target.partition("#")
+        key = "/" + path.strip("/")
+        if key in REDIR:
+            target = REDIR[key] if not frag else REDIR[key].split("#")[0] + "#" + frag
+    return _orig_href(self, target)
+Ctx.href = _href
+
+def tier_html(c, line):
+    parts = [p.strip() for p in line[1:].split(" :: ")]
+    m = re.match(r"\[(.+?)\]\s+(.+)", parts[0]); tag, name = m.groups()
+    desc, items = parts[1], [x.strip() for x in parts[2].split(";")]
+    excl = parts[3] if len(parts) > 3 and parts[3] else ""
+    summary = parts[4] if len(parts) > 4 else ""
+    if excl.startswith("::"): summary, excl = excl[2:].strip(), ""
+    pkg = tag.startswith("PACKAGE")
+    price = ('<div class="tier__price"><span class="mono">Price</span><b>Quoted after a free call</b></div>' if pkg else
+             '<div class="tier__price"><span class="mono">Monthly fee</span><b>Agreed per business</b></div>')
+    return f'''<article class="tier rv"><span class="mono acc">{E(tag.title())}</span><h3>{E(name)}</h3><p class="tier__d">{E(desc)}</p>{price}
+{f'<p class="tier__s">{E(summary)}</p>' if summary else ""}<ul class="ticks">{"".join(f"<li>{E(i)}</li>" for i in items)}</ul>
+{f'<p class="tier__x"><span class="mono">Not included</span> {E(excl)}</p>' if excl else ""}{btn(c,"Get a quote" if pkg else "Ask about this plan","/contact","line",True)}</article>'''
+B.tier_html = tier_html
+
+from founder_data import STORY, ELSEWHERE
+def founder_section(c):
+    story = "".join((f'<p class="pull rv">{E(p[1:])}</p>' if p.startswith(">") else f'<p class="rv">{E(p)}</p>') for p in STORY)
+    links = "".join(f'<a class="card card--link rv" {a_attrs(c,u)}><span class="mono acc">{E(k.title())}</span><h3>{E(t)}</h3><p>{E(d)}</p><span class="card__go mono">Open {EXT}</span></a>' for k,t,d,u in ELSEWHERE)
+    return f'''<section class="sec" id="founder"><div class="wrap"><div class="fgrid fgrid--story">
+<figure class="fphoto rv"><img src="{c.asset("img/founder-cut.webp")}" alt="Mohamed Refaat, founder of OPSMO" loading="lazy" width="820" height="979"><figcaption class="tag">Founder &amp; Principal Consultant</figcaption></figure>
+<div class="fcopy">{chip("The founder")}<h2 class="h2 rv">Mohamed <em>Refaat</em></h2>
+<p class="mono dim rv">Meeting Minds · Property Finder · Zoho · Motivate Media Group · PropSpace</p>
+<div class="fstory">{story}</div></div></div></div></section>
+{proof_strip(c)}
+{sec(head("Check for yourself","Read, verify, connect.") + f'<div class="grid3">{links}</div>')}
+{videos_block(c)}'''
+
+def render_about(c):
+    meta, body = B.parse_md(os.path.join(B.HERE, "content", "about.md"))
+    h = B.render_body(c, meta, body)
+    i = h.rfind('<section class="ctax"')
+    return h[:i] + founder_section(c) + h[i:]
+
+_orig_solution = B.render_solution
+def render_solution(c, slug):
+    h = _orig_solution(c, slug)
+    if slug == "managed-crm-operations":
+        meta, body = B.parse_md(os.path.join(B.HERE, "partials", "retainers.md"))
+        extra = B.render_body(c, meta, body).replace('<section class="sec ', '<section id="retainers" class="sec ', 1)
+        i = h.find('<div class="faq">'); i = h.rfind('<section', 0, i)
+        h = h[:i] + extra + h[i:]
+    return h
+B.render_solution = render_solution
+
+INTRO_CLEAN = {
+ "real-estate": "Enquiries arrive from portals, your website and brokers within minutes. We set up how leads are captured, assigned, followed up and turned into deals.",
+}
+def render_industries(c):
+    others = [x for x in IND_ORDER if x != "real-estate"]
+    tabs = "".join(f'<button class="etab{" is-on" if i==0 else ""}" role="tab" id="it-{x}" aria-controls="{x}" aria-selected="{"true" if i==0 else "false"}"><span>{i+1:02d}</span>{E(IND[x]["name"])}</button>' for i, x in enumerate(others))
+    panels = ""
+    for i, x in enumerate(others):
+        d = IND[x]
+        flow = "".join(f"<li>{E(f)}</li>" for f in d["flow"])
+        spec = "".join(f"<li>{E(f)}</li>" for f in d["spec"])
+        panels += f'''<div class="ep ind{" is-on" if i==0 else ""}" id="{x}" role="tabpanel" aria-labelledby="it-{x}"{"" if i==0 else " hidden"}>
+<div class="ep__img"><img src="{c.asset("img/"+d["img"]+".webp")}" alt="" loading="lazy"><div><span class="mono">{E(d["tagline"])}</span><h3>{E(d["name"])}</h3></div></div>
+<div class="ind__body"><p class="lead">{E(d["intro"])}</p><div class="ind__cols"><div><h4 class="mono acc">How the work flows</h4><ol class="ind__flow">{flow}</ol></div>
+<div><h4 class="mono acc">What we set up</h4><ul class="ticks">{spec}</ul></div></div>
+<div class="btnrow">{btn(c,"Talk about your business","/book")}{btn(c,"Request an assessment","/contact","line")}</div></div></div>'''
+    re_ = IND["real-estate"]
+    feature = f'''<a class="refeat rv" {a_attrs(c,"/industries/real-estate")}><img src="{c.asset("img/skyline.webp")}" alt="" loading="lazy"><div class="refeat__in">
+<span class="mono acc">Our deepest experience</span><h2 class="h2">Real estate</h2><p>Two stints at Property Finder and the PropSpace move to Zoho One. See how we set up Zoho for brokerages and developers, with Property Finder and Bayut leads.</p>
+<span class="btn btn--fire">See Zoho for real estate {ARROW}</span></div></a>'''
+    return f'''<section class="phero phero--img"><div class="wrap phero__grid"><div class="phero__copy">{chip("Industries")}
+<h1 class="phero__h rv">The same CRM ideas. <em>Your industry's way of working.</em></h1>
+<p class="phero__p rv">Every sector sells, delivers and bills differently. We start from how your industry actually works, then set up the system around it.</p>
+{btns(c,[("Book a free consultation","/book"),("Request an assessment","/contact")])}</div>
+<div class="pstack rv" aria-hidden="true"><span class="pstack__a"></span><span class="pstack__b"></span><figure><img src="{c.asset("img/team.webp")}" alt="" fetchpriority="high"></figure></div></div></section>
+{sec(feature)}
+<section class="sec" id="sectors"><div class="wrap">{head("Other industries","Pick your sector.","Each tab shows how the work usually flows and what we set up.")}
+<div class="explorer rv"><div class="explorer__tabs" role="tablist" aria-label="Industries">{tabs}</div><div class="explorer__panel">{panels}</div></div>
+<p class="fine rv">{E(B.INTEGRATION_NOTE)}</p></div></section>
+{contact_paths(c)}'''
+
+RE_PAINS = [("Leads come from everywhere","Property Finder, Bayut, your website, Meta ads and WhatsApp all send enquiries. Without one inbox, some are answered twice and some never."),
+            ("Speed decides the deal","The agent who calls back first usually wins the client. Manual assignment means minutes become hours."),
+            ("Agents keep their own lists","When follow-ups live in personal phones and spreadsheets, the company loses the history when an agent leaves."),
+            ("Managers can't see the pipeline","Which source brings real buyers? Which agent converts? Without clean data, nobody knows.")]
+RE_FAQ = [("Can Zoho receive Property Finder and Bayut leads automatically?","Yes, where the portal gives API or email-lead access for your account. Leads land in Zoho CRM with the listing, source and campaign attached, and are assigned to an agent straight away."),
+          ("We already have a CRM. Do we have to start over?","No. We review what you have first. If it can do the job, we fix it. If it can't, we move your contacts, deals and history to Zoho and check them record by record."),
+          ("How long does a real-estate setup take?","A standard brokerage setup usually takes four to six weeks, including testing and team training. Larger developers with several projects are rolled out in phases."),
+          ("Can the team work in Arabic and English?","Yes. Zoho supports both, and we train teams in Arabic and English.")]
+def render_real_estate(c):
+    d = IND["real-estate"]
+    pains = "".join(f'<li class="rv"><span class="pains__n mono">0{i+1}</span><div><h3>{E(t)}</h3><p>{E(x)}</p></div></li>' for i, (t, x) in enumerate(RE_PAINS))
+    flow = "".join(f'<li class="rv"><span class="flow__n mono">0{i+1}</span><p>{E(x)}</p></li>' for i, x in enumerate(d["flow"]))
+    ws = "".join(f'<div class="ws__row"><b>{E(a)}</b><span>{E(b)}</span></div>' for a, b in WS)
+    return f'''<section class="phero phero--img"><div class="wrap phero__grid"><div class="phero__copy">{chip("Zoho for real estate · Dubai")}
+<h1 class="phero__h rv">From portal enquiry to signed deal, <em>without losing a lead.</em></h1>
+<p class="phero__p rv">{E(INTRO_CLEAN["real-estate"])} Built by a team that worked inside Property Finder.</p>
+{btns(c,[("Book a free consultation","/book"),("Request an assessment","/contact")])}</div>
+<div class="pstack rv" aria-hidden="true"><span class="pstack__a"></span><span class="pstack__b"></span><figure><img src="{c.asset("img/skyline.webp")}" alt="" fetchpriority="high"></figure></div></div></section>
+{sec(f'<div class="daily"><div class="head head--sticky">{chip("The problem")}<h2 class="h2 rv">Why real-estate teams <em>lose good leads.</em></h2><p class="callout rv">It is rarely the agents. It is the missing system behind them.</p></div><ol class="pains">{pains}</ol></div>')}
+{sec(head("How it works","One path for every enquiry.", "This is the flow we set up in Zoho CRM. Every step is tracked, so nothing depends on memory.") + f'<ol class="flow">{flow}</ol>')}
+{sec(f"""<div class="pack"><div class="head head--sticky">{chip("What we set up")}<h2 class="h2 rv">Six parts, <em>one owner.</em></h2><p class="lead rv">We own the whole rollout, from setup to training your team in Arabic and English.</p><div class="btnrow">{btn(c,"Scope your rollout","/book")}</div></div><div class="ws rv">{ws}</div></div>""")}
+{sec(f"""<div class="head">{chip("Why us")}<h2 class="h2 rv">We have worked <em>on the portal side.</em></h2><p class="lead rv">Mohamed spent two stints at Property Finder Group and led PropSpace's move from Salesforce to Zoho One.</p></div>
+<ul class="proof"><li class="rv"><b class="num-big">300+</b><span>UAE real-estate accounts managed at Property Finder</span></li><li class="rv"><b class="num-big">164%</b><span>retention revenue growth in Q1</span></li><li class="rv"><b class="num-big">150+</b><span>UAE companies moved to the new PropSpace model</span></li><li class="rv"><b class="num-big">40%</b><span>less manual effort after the Zoho One move</span></li><li class="rv"><b class="num-big">650K+</b><span>USD annual revenue on PropSpace's Zoho One system</span></li><li class="rv"><b class="num-big">8 → 1</b><span>separate tools replaced by one platform</span></li></ul>
+<div class="btnrow">{btn(c,"Read the PropSpace story","/success-stories")}</div>""")}
+{sec(f'<div class="faq">{head("FAQ","Questions real-estate teams ask us.")}{faq_html(RE_FAQ)}</div>')}
+<p class="wrap fine">{E(B.INTEGRATION_NOTE)}</p>
+{contact_paths(c)}'''
+
+def render_contact_merged(c):
+    book = B.render_book(c).replace('<h1 class="phero__h', '<h2 class="phero__h').replace('</h1>', '</h2>', 1)
+    book = book.replace('<section class="phero phero--form">', '<section class="phero phero--form phero--book" id="book">', 1)
+    form = B.render_contact(c).replace('<section class="phero phero--form">', '<section class="phero phero--form" id="assessment">', 1)
+    form = form.replace('<h1 class="phero__h', '<h2 class="phero__h').replace('</h1>', '</h2>', 1)
+    top = f'''<section class="phero phero--contact"><div class="wrap"><div class="phero__copy">{chip("Contact")}
+<h1 class="phero__h rv">Let's talk about <em>how your business runs.</em></h1>
+<p class="phero__p rv">Choose the way that suits you. Every request is read by a person, usually within one business day.</p></div>
+<div class="paths paths--top">
+<a class="path path--hot rv" href="#book"><span class="mono">30 minutes · free</span><h3>Book a call</h3><p>Pick a day and time. We confirm by email or WhatsApp.</p><span class="path__go">Choose a time {ARROW}</span></a>
+<a class="path rv" href="{WA}" target="_blank" rel="noopener"><span class="mono">Fastest</span><h3>WhatsApp</h3><p>Send a short message and get a direct reply from Mohamed.</p><span class="path__go">{PHONE} {EXT}</span></a>
+<a class="path rv" href="#assessment"><span class="mono">Written reply</span><h3>Operational assessment</h3><p>Three short steps about your systems and goals. We reply with a scoped recommendation.</p><span class="path__go">Start {ARROW}</span></a>
+</div></div></section>'''
+    return top + book + form
+
+def add_anchor_ids(html_):
+    def rep(m):
+        slug = re.sub(r"[^a-z0-9]+", "-", html.unescape(m.group(2)).lower()).strip("-")
+        return f'<section id="{slug}" class="sec {m.group(1)}"><div class="wrap"><div class="sechead"><p class="chip rv">{m.group(2)}</p>'
+    return re.sub(r'<section class="sec ([^"]*)"><div class="wrap"><div class="sechead"><p class="chip rv">([^<]+)</p>', rep, html_)
+
+CLEAN = [
+ (r" · \[(SYSTEM|STACK|VERTICAL|CATEGORY|TIER): [^\]]*\]", ""), (r"\[(SYSTEM|STACK|VERTICAL|CATEGORY|TIER): [^\]]*\]\s*", ""),
+ (r'<p class="notice mono">NO CALENDAR PROVIDER IS CONNECTED YET\. THE TIME YOU CHOOSE IS A REQUEST, NOT A CONFIRMED SLOT\.</p>', '<p class="notice mono">We confirm the exact time with you by email or WhatsApp.</p>'),
+ (r'<p class="fine">Submissions are stored securely and visible only to the OPSMO team\. CRM synchronisation is queued and shown as pending until the integration is configured\.</p>', ''),
+]
+_page5 = page
+def page(c, title, body, desc=None, route="/"):
+    for pat, rep in CLEAN: body = re.sub(pat, rep, body)
+    body = add_anchor_ids(body)
+    return _page5(c, title, body, desc, route)
+
 # ------------------------------------------------------------------ wire up + build
 B._orig_nav = B.nav_html
 _of = B.render_founder
@@ -333,6 +496,17 @@ def render_founder(c):
     return h[:i] + proof_strip(c) + videos_block(c) + h[i:] if i > 0 else h + proof_strip(c) + videos_block(c)
 B.render_founder = render_founder
 B.nav_html = nav_html; B.footer_html = footer_html; B.cta_block = cta_block; B.render_home = render_home; B.THEME_BOOT = THEME_BOOT
+
+# ---- v6 plain-English copy
+import copy6, shared
+for _k, _v in copy6.SOL_COPY.items():
+    if _k in SOL: SOL[_k].update(_v)
+B.METHOD[:] = copy6.METHOD; B.RECEIVE[:] = copy6.RECEIVE
+B.CTA["default"] = copy6.CTA; shared.CTA["default"] = copy6.CTA
+for _k, _d in copy6.SOL_HUB:
+    if _k in SOL_META: SOL_META[_k] = SOL_META[_k][:3] + (_d,) + SOL_META[_k][4:]
+CLEAN += [(re.escape(a), b) for a, b in copy6.LABELS] + [(r'<span class="mono acc"></span>', ''),
+ (r"The same six-stage discipline, applied to this solution\.", "Our six-step method."), (r"What you receive", "What you get")]
 
 ROUTES = []
 def write(route, title, body, desc=None):
@@ -344,26 +518,51 @@ def write(route, title, body, desc=None):
     ROUTES.append(route); return route
 B.write = write
 
+def write_redirect(old, new):
+    c = Ctx(old)
+    target = c.href(new)
+    out_dir = os.path.join(B.OUT, old.strip("/")); os.makedirs(out_dir, exist_ok=True)
+    url = SITE + "/" + new.split("#")[0].strip("/") + ("/" if new.split("#")[0].strip("/") else "") + ("#" + new.split("#")[1] if "#" in new else "")
+    open(os.path.join(out_dir, "index.html"), "w").write(f'<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>Moved | OPSMO</title><meta name="robots" content="noindex"><link rel="canonical" href="{url}"><meta http-equiv="refresh" content="0; url={target}"><script>location.replace("{target}")</script></head><body><p>This page moved: <a href="{target}">{url}</a></p></body></html>')
+
 def main():
-    B.main.__globals__["write"] = write
-    # page-specific titles that read better in search
-    B.main()
+    cdir = os.path.join(B.HERE, "content")
     write("/", "OPSMO — Zoho One & CRM Implementation in Dubai, UAE | Ex-Zoho Founder", render_home, DEFAULT_DESC)
+    for root, _, files in os.walk(cdir):
+        for fn in files:
+            if not fn.endswith(".md"): continue
+            rel = os.path.relpath(os.path.join(root, fn), cdir); route = B.md_route(rel); full = os.path.join(root, fn)
+            if route in ("/about", "/industries"): continue
+            meta, body = B.parse_md(full)
+            if rel.startswith("insights/") and fn != "index.md":
+                write(route, meta["title"], lambda c, f=full: B.render_article(c, f), meta["deck"]); continue
+            write(route, meta["title"], lambda c, m=meta, b=body: B.render_body(c, m, b))
+    for x in SOL:
+        write("/solutions/" + x, SOL[x]["doc"], lambda c, x=x: render_solution(c, x), SOL[x]["tagline"])
+    write("/about", "About OPSMO & Founder Mohamed Refaat — Ex-Zoho, Dubai | OPSMO", render_about,
+          "OPSMO is a Dubai company that sets up and runs Zoho for sales, service and operations teams. Founded by Mohamed Refaat, Zoho's first Egyptian hire.")
+    write("/industries", "Industries — CRM & Zoho Systems by Sector | OPSMO", render_industries,
+          "How OPSMO sets up Zoho and CRM systems for real estate, professional services, media, events, retail, B2B distribution and growing SMEs.")
+    write("/industries/real-estate", "Zoho CRM for Real Estate in Dubai — Property Finder & Bayut Leads | OPSMO", render_real_estate,
+          "Zoho CRM for UAE brokerages and developers: Property Finder and Bayut leads, instant agent assignment, follow-ups and pipeline reports. Built by an ex-Property Finder team.")
+    write("/contact", "Contact OPSMO — Book a Call or WhatsApp | Dubai", render_contact_merged,
+          "Book a free 30-minute call, message OPSMO on WhatsApp, or request a written operational assessment. Dubai, serving the UAE and GCC.")
     write("/success-stories", "Success Stories — Zoho One Transformations in the UAE & GCC | OPSMO", render_stories_page,
           "How PropSpace, Elnaggar & Partners, R1 Performance and Fawry Microfinance moved from spreadsheets and WhatsApp to one Zoho One operating system.")
+    for old, new in REDIR.items(): write_redirect(old, new)
     c = Ctx("/")
-    # 404
     p404 = page(c, "Page not found | OPSMO", f'<section class="phero"><div class="wrap"><div class="phero__copy">{chip("404")}<h1 class="phero__h">This page <em>isn\'t here.</em></h1><p class="phero__p">The link may be out of date. Try the homepage or book a call.</p>{btns(c,[("Back to home","/"),("Book a Call","/book")])}</div></div></section>', "The page you were looking for could not be found.", "/404")
     p404 = p404.replace('href="./', 'href="/').replace('src="assets', 'src="/assets').replace('href="assets', 'href="/assets').replace('<meta name="robots" content="index, follow, max-image-preview:large">', '<meta name="robots" content="noindex">')
     open(os.path.join(B.OUT, "404.html"), "w").write(p404)
-    # sitemap + robots
     pri = lambda r: "1.0" if r == "/" else ("0.9" if r.count("/") == 1 else "0.7")
     urls = sorted(set(ROUTES))
     sm = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "".join(
-        f'  <url><loc>{SITE}{"/" if r=="/" else r+"/"}</loc><lastmod>2026-11-19</lastmod><priority>{pri(r)}</priority></url>\n' for r in urls) + "</urlset>\n"
+        f'  <url><loc>{SITE}{"/" if r=="/" else r+"/"}</loc><lastmod>2026-11-20</lastmod><priority>{pri(r)}</priority></url>\n' for r in urls) + "</urlset>\n"
     open(os.path.join(B.OUT, "sitemap.xml"), "w").write(sm)
     open(os.path.join(B.OUT, "robots.txt"), "w").write(f"User-agent: *\nAllow: /\n\nSitemap: {SITE}/sitemap.xml\n")
-    print(len(urls), "pages + sitemap")
+    vr = {"cleanUrls": False, "trailingSlash": True, "redirects": [{"source": o + "/", "destination": n.split("#")[0] + ("/" if not n.split("#")[0].endswith("/") else ""), "permanent": True} for o, n in REDIR.items()]}
+    open(os.path.join(B.OUT, "vercel.json"), "w").write(json.dumps(vr, indent=2))
+    print(len(urls), "pages,", len(REDIR), "redirects")
 
 if __name__ == "__main__":
     main()

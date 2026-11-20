@@ -1,0 +1,76 @@
+{
+  "cleanUrls": false,
+  "trailingSlash": true,
+  "redirects": [
+    {
+      "source": "/founder/",
+      "destination": "/about/",
+      "permanent": true
+    },
+    {
+      "source": "/book/",
+      "destination": "/contact/",
+      "permanent": true
+    },
+    {
+      "source": "/packages/",
+      "destination": "/approach/",
+      "permanent": true
+    },
+    {
+      "source": "/managed-services/",
+      "destination": "/solutions/managed-crm-operations/",
+      "permanent": true
+    },
+    {
+      "source": "/platforms/salesforce/",
+      "destination": "/platforms/",
+      "permanent": true
+    },
+    {
+      "source": "/platforms/odoo/",
+      "destination": "/platforms/",
+      "permanent": true
+    },
+    {
+      "source": "/platforms/analytics/",
+      "destination": "/platforms/",
+      "permanent": true
+    },
+    {
+      "source": "/platforms/automation-integration/",
+      "destination": "/platforms/",
+      "permanent": true
+    },
+    {
+      "source": "/industries/professional-services/",
+      "destination": "/industries/",
+      "permanent": true
+    },
+    {
+      "source": "/industries/media-advertising/",
+      "destination": "/industries/",
+      "permanent": true
+    },
+    {
+      "source": "/industries/events-communities/",
+      "destination": "/industries/",
+      "permanent": true
+    },
+    {
+      "source": "/industries/retail-ecommerce/",
+      "destination": "/industries/",
+      "permanent": true
+    },
+    {
+      "source": "/industries/b2b-sales-distribution/",
+      "destination": "/industries/",
+      "permanent": true
+    },
+    {
+      "source": "/industries/smes-growing-enterprises/",
+      "destination": "/industries/",
+      "permanent": true
+    }
+  ]
+}
