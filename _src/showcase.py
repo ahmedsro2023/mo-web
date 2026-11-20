@@ -1,52 +1,55 @@
 # v7 dynamic showcase modules (rendered server-side, animated by assets/js/showcase.js)
 from build import E, ARROW, EXT, btn, chip, sec, head, em_last, a_attrs
+import json
+from sectors import SECTORS, ORDER
 
-def live_demo(c):
-    cols = ["New", "Contacted", "Viewing", "Offer", "Won"]
+def sector_data():
+    return '<script type="application/json" class="sector-data">' + json.dumps(SECTORS, ensure_ascii=False).replace("</", "<\\/") + '</script>'
+def picker(cur, label="Pick your sector"):
+    chips = "".join(f'<button type="button" class="sp__chip{" is-on" if k==cur else ""}" data-sector="{k}" aria-pressed="{"true" if k==cur else "false"}">{E(SECTORS[k]["label"])}</button>' for k in ORDER)
+    return f'<div class="sp" role="group" aria-label="{E(label)}"><span class="mono dim">{E(label)}</span>{chips}</div>'
+
+def live_demo(c, sector="real-estate", pick=True):
+    cols = SECTORS[sector]["stages"]
     colhtml = "".join(f'<div class="lv__col" data-col="{i}"><p class="lv__ch">{n}<b data-colcount>0</b></p><div class="lv__cards"></div></div>' for i, n in enumerate(cols))
     return sec(f'''<div class="head head--split"><div>{chip("See it working")}<h2 class="h2 rv">Every lead caught. <em>Every lead followed up.</em></h2></div>
 <p class="lead rv">This is what a well-built system does all day, without anyone chasing it: leads arrive, get assigned in seconds, and move through the pipeline while managers watch the numbers live.</p></div>
-<div class="lv rv" id="liveDemo" aria-label="Animated illustration of a CRM pipeline with sample data">
+{picker(sector) if pick else ""}<div class="lv rv" id="liveDemo" data-sector="{sector}" aria-label="Animated illustration of a CRM pipeline with sample data">{sector_data()}
 <div class="lv__top"><span class="lv__dots"><i></i><i></i><i></i></span><span class="mono">Sales pipeline · live</span><span class="lv__badge mono"><i class="dot"></i>Sample data</span></div>
 <div class="lv__grid">
 <aside class="lv__feed"><p class="mono dim">Incoming leads</p><ul id="lvFeed"></ul></aside>
 <div class="lv__board">{colhtml}</div>
-<aside class="lv__kpis"><div><span class="mono dim">Leads today</span><b id="kLeads">0</b></div><div><span class="mono dim">Avg. first response</span><b id="kResp">—</b></div><div><span class="mono dim">Follow-ups due</span><b id="kTasks">0</b></div><div><span class="mono dim">Won this week</span><b id="kWon">0</b></div>
+<aside class="lv__kpis"><div><span class="mono dim">Leads today</span><b id="kLeads">0</b></div><div><span class="mono dim">Avg. first response</span><b id="kResp">—</b></div><div><span class="mono dim">Follow-ups due</span><b id="kTasks">0</b></div><div><span class="mono dim" id="kWonL">{E(SECTORS[sector]["won"])}</span><b id="kWon">0</b></div>
 <div class="lv__spark"><svg viewBox="0 0 200 60" preserveAspectRatio="none"><path id="lvSpark" d="M0 60"/></svg></div></aside>
 </div></div>
 <p class="fine rv">Illustration with sample data. Real setups use your sources, stages and team.</p>''', "", "live")
 
-BEFORE = [("0:00","A lead comes in on Property Finder","The email sits in a shared inbox."),
-          ("0:45","Someone forwards it to a WhatsApp group","Three agents see it. Nobody owns it."),
-          ("2:10","An agent copies it into Excel","The source and listing are lost."),
-          ("4:20","First call back","The buyer already spoke to another agency."),
-          ("Day 3","No follow-up reminder","The lead goes cold. Nobody notices.")]
-AFTER = [("0:00","The lead lands in Zoho CRM","Source, listing and campaign attached."),
-         ("0:05","Assigned automatically","By area, language and agent availability."),
-         ("0:06","Agent notified on mobile","With one-tap call and WhatsApp."),
-         ("4:00","Call logged, next step set","A follow-up task is created for tomorrow."),
-         ("Live","Manager dashboard updates","Source, speed and conversion, in real time.")]
-def before_after(c):
-    def lane(items, cls):
-        return f'<ol class="ba__lane {cls}">' + "".join(f'<li><span class="ba__t mono">{E(t)}</span><div><b>{E(h)}</b><p>{E(p)}</p></div></li>' for t, h, p in items) + "</ol>"
-    return sec(f'''<div class="head head--center">{chip("Before and after")}<h2 class="h2 rv">The same lead. <em>Two very different days.</em></h2>
+def before_after(c, sector="real-estate", pick=True):
+    d = SECTORS[sector]
+    def lane(x, cls):
+        return f'<ol class="ba__lane {cls}">' + "".join(f'<li><span class="ba__t mono">{E(t)}</span><div><b>{E(h)}</b><p>{E(p)}</p></div></li>' for t, h, p in x["steps"]) + "</ol>"
+    return sec(f'''<div class="head head--center">{chip("Before and after")}<h2 class="h2 rv">The same request. <em>Two very different days.</em></h2>
 <p class="lead rv">Switch between a typical setup and one we build, and watch the clock.</p></div>
-<div class="ba rv" id="beforeAfter" data-mode="before">
+{picker(sector) if pick else ""}
+<div class="ba rv" id="beforeAfter" data-mode="before" data-sector="{sector}">{sector_data()}
 <div class="ba__switch" role="tablist" aria-label="Compare"><button role="tab" aria-selected="true" data-mode="before">Today: WhatsApp &amp; Excel</button><button role="tab" aria-selected="false" data-mode="after">With an OPSMO system</button><i class="ba__pill" aria-hidden="true"></i></div>
-<div class="ba__stage"><div class="ba__clock"><span class="mono dim">Time to first call</span><b id="baClock">4h 20m</b><span class="ba__verdict" id="baVerdict">Lead lost</span></div>
-<div class="ba__lanes">{lane(BEFORE, "ba__lane--before")}{lane(AFTER, "ba__lane--after")}</div></div></div>
-<p class="fine rv center">Typical example from real-estate teams. Your timings will differ.</p>''', "", "before-after")
+<div class="ba__stage"><div class="ba__clock"><span class="mono dim" id="baMetric">{E(d["metric"])}</span><b id="baClock">{E(d["before"]["label"])}</b><span class="ba__verdict" id="baVerdict">{E(d["before"]["verdict"])}</span>
+<div class="ba__gain" id="baGain"></div></div>
+<div class="ba__lanes">{lane(d["before"], "ba__lane--before")}{lane(d["after"], "ba__lane--after")}</div></div></div>
+<p class="fine rv center">Illustrative example. Your timings will differ.</p>''', "", "before-after")
 
-def savings_calc(c):
+def savings_calc(c, sector="real-estate", pick=True):
+    cv = SECTORS[sector]["calc"]
     def rng(id_, label, mn, mx, step, val, unit):
         return f'<label class="calc__row" for="{id_}"><span>{label}</span><output id="{id_}Out">{val}{unit}</output><input type="range" id="{id_}" min="{mn}" max="{mx}" step="{step}" value="{val}" data-unit="{unit}"></label>'
     return sec(f'''<div class="calc rv" id="calc">
 <div class="calc__in">{chip("Time & cost calculator")}<h2 class="h2">How much time is <em>manual work costing you?</em></h2>
 <p class="lead">Move the sliders to match your team. In the businesses we audit, manual work takes 25–40% of team time.</p>
-{rng("cTeam","People on the team",2,200,1,15,"")}
-{rng("cHours","Hours each spends on manual work, per week",1,25,1,8," h")}
-{rng("cRate","Average cost per hour (AED)",20,300,5,60," AED")}
-{rng("cCut","Share of that work a good system removes",10,80,5,50,"%")}</div>
+{picker(sector, "Start from a typical") if pick else ""}{sector_data() if pick else ""}
+{rng("cTeam","People on the team",2,200,1,cv["team"],"")}
+{rng("cHours","Hours each spends on manual work, per week",1,25,1,cv["hours"]," h")}
+{rng("cRate","Average cost per hour (AED)",20,300,5,cv["rate"]," AED")}
+{rng("cCut","Share of that work a good system removes",10,80,5,cv["cut"],"%")}</div>
 <div class="calc__out" aria-live="polite"><p class="mono dim">Every year you could get back</p>
 <div class="calc__big"><b id="oHours">0</b><span>hours</span></div>
 <div class="calc__row2"><div><b id="oAed">0</b><span>AED in team time</span></div><div><b id="oFte">0</b><span>full-time people freed up</span></div></div>

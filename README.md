@@ -55,3 +55,10 @@ Rebuild: `cd _src && OUT=.. python3 site5.py && cp -r assets ..` (assets live in
 ## v7 — dynamic showcase
 - `showcase.py` + `assets/js/showcase.js`: live CRM pipeline (sample data), before/after lead journey, time & cost calculator, 12-week rollout timeline (scroll-scrubbed), Zoho One department map.
 - Home: before/after, live pipeline, calculator. Zoho page: department map, rollout, calculator. Real estate: before/after, live pipeline. How We Work: rollout.
+
+## v8
+- Sector switcher (real estate, legal, automotive, lending, distribution) drives before/after, live pipeline and calculator presets (`sectors.py`).
+- Impact board (revenue bars, donut, gauge, decision timeline).
+- Client confidentiality: `SHOW_CLIENT_NAMES = False` in `site5.py` blurs client logos and anonymises names. Set to True to show them.
+- Light animated app screens per solution in the home explorer (`screens.py`).
+- Message from Mohamed (`assets/js/hook.js`): opens after 18s, half-page scroll or exit intent; once per visit, snoozed 3 days when closed.

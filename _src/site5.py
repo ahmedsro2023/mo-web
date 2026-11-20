@@ -51,7 +51,24 @@ CASES = [
 SECTORS = [("r1-w","4M+ AED ARR","Automotive"),("elnaggar-w","500K+ USD ARR","Legal"),("fawry","2M+ USD ARR","Financial services"),("ndc-w","4M+ USD ARR","Travel & tourism"),
            ("propspace-w","650K+ USD ARR","PropTech · real estate"),("twaasol-w","30M+ USD revenue","IT services & consulting"),("lucky-w","2M+ USD revenue","Financial services")]
 
+# ---- client confidentiality: set True to show client names and sharp logos again
+SHOW_CLIENT_NAMES = False
+PUBLIC_LOGOS = {"propertyfinder-w", "propspace-w", "zohoone-w", "zohoone-c", "uaestories"}   # employers / public partners
+ANON = {"elnaggar": ("Corporate law firm", "the firm"),
+        "r1-performance": ("Performance car workshop", "the workshop"), "fawry": ("Microfinance lender", "the lender")}
+if not SHOW_CLIENT_NAMES:
+    for _k in CASES:
+        if _k["slug"] not in ANON: continue
+        _full, _short = ANON[_k["slug"]]
+        for _f in ("k", "ch", "so", "goal"):
+            _k[_f] = _k[_f].replace(_k["name"], _short).replace("Fawry Microfinance", _short)
+        _k["k"] = _k["k"][0].upper() + _k["k"][1:]
+        _k["name"] = _full
+
 def logo(c, name, alt="", cls=""):
+    if not SHOW_CLIENT_NAMES and name not in PUBLIC_LOGOS:
+        return f'<img src="{c.asset("img/logos/"+name+".png")}" alt="" aria-hidden="true" class="{cls} is-blur" loading="lazy">'
+
     return f'<img src="{c.asset("img/logos/"+name+".png")}" alt="{E(alt)}" class="{cls}" loading="lazy">'
 
 # ------------------------------------------------------------------ components
@@ -136,14 +153,31 @@ WS = [("CRM setup & customisation","Sales and leasing pipelines, user permission
       ("Management visibility","Dashboards for lead sources, agent activity and sales performance"),
       ("Launch & team adoption","Integration testing, team training and 30-day post-launch support")]
 
+MONTHS = ["J","F","M","A","M","J","J","A","S","O","N","D"]
+def impact_board():
+    bars = "".join(f'<span style="--i:{i}"><i></i><em>{m}</em></span>' for i, m in enumerate(MONTHS))
+    steps = "".join(f'<li style="--i:{i}"><b>{t}</b><span>{d}</span></li>' for i, (t, d) in enumerate([("Day 1","Question raised"),("Day 4","Data pulled by hand"),("Day 9","Numbers disputed"),("Day 15","Meeting held"),("Day 18","Decision made")]))
+    return f'''<div class="lk2" id="impactBoard">
+<article class="lk lk--money"><p class="lk__k">Missed leads &amp; revenue</p><p class="lk__big"><span class="lk__cur">AED</span><b id="lkMoney">0</b><span class="lk__suf">K+</span></p><p class="lk__s">lost per year, about <b>AED 1,370 a day</b></p>
+<div class="lk__bars" aria-hidden="true">{bars}</div></article>
+<article class="lk lk--time"><p class="lk__k">Manual processes</p><div class="lk__donut" aria-hidden="true"><svg viewBox="0 0 120 120"><circle class="d0" cx="60" cy="60" r="50"/><circle class="d1" cx="60" cy="60" r="50"/><circle class="d2" cx="60" cy="60" r="50"/></svg><div><b>25–40%</b><span>of team time</span></div></div>
+<p class="lk__s">That's <b>10 to 16 hours</b> a week, per person, on copy-paste and chasing.</p></article>
+<article class="lk lk--acc"><p class="lk__k">Reporting accuracy</p><div class="lk__gauge" aria-hidden="true"><svg viewBox="0 0 200 110"><path class="g0" d="M20 100 A80 80 0 0 1 180 100"/><path class="g1" d="M20 100 A80 80 0 0 1 180 100"/><line class="g2" x1="100" y1="100" x2="100" y2="34"/><circle cx="100" cy="100" r="6"/></svg></div>
+<p class="lk__mid"><b>Under 60%</b></p><p class="lk__s">Around <b>4 in 10</b> report figures can't be trusted without checking.</p></article>
+<article class="lk lk--delay"><div class="lk__dh"><p class="lk__k">Decision delays</p><p class="lk__big lk__big--sm"><b>2–3</b><span class="lk__suf"> weeks per decision</span></p></div>
+<ol class="lk__line">{steps}</ol></article>
+</div>'''
+
 def render_home(c):
     sol_tabs, sol_panels = "", ""
     for i, s in enumerate(SOL_ORDER):
         sys_, name, short, desc, img = SOL_META[s]
         bul = SS_BULLETS if s == "software-selection" else (ZD_SCOPE if s == "zoho-desk-implementation" else SOL[s]["scope"][:4])
         sol_tabs += f'<button class="etab{" is-on" if i==0 else ""}" role="tab" id="st-{s}" aria-controls="sp-{s}" aria-selected="{"true" if i==0 else "false"}" data-i="{i}"><span>{i+1:02d}</span>{E(short)}</button>'
-        sol_panels += f'''<div class="ep{" is-on" if i==0 else ""}" id="sp-{s}" role="tabpanel" aria-labelledby="st-{s}"{"" if i==0 else " hidden"}><div class="ep__img"><img src="{c.asset("img/"+img+".webp")}" alt="" loading="lazy"><div><span class="mono">[SYSTEM: {sys_}]</span><h3>{E(name)}</h3></div></div>
-<div class="ep__body"><div><p>{E(desc)}</p><div class="btnrow">{btn(c,"Explore "+short,"/solutions/"+s,"fire",True)}{btn(c,"Book a consultation","/book","line",True)}</div></div><ul class="ticks">{"".join(f"<li>{E(b)}</li>" for b in bul)}</ul></div></div>'''
+        sol_panels += f'''<div class="ep ep--scr{" is-on" if i==0 else ""}" id="sp-{s}" role="tabpanel" aria-labelledby="st-{s}"{"" if i==0 else " hidden"}>
+<div class="ep__stage">{screen(s)}</div>
+<div class="ep__body"><h3 class="ep__h">{E(name)}</h3><p>{E(desc)}</p><ul class="ticks">{"".join(f"<li>{E(b)}</li>" for b in bul[:4])}</ul>
+<div class="btnrow">{btn(c,"Explore "+short,"/solutions/"+s,"fire",True)}{btn(c,"Book a consultation","/book","line",True)}</div></div></div>'''
     reality = "".join(f'<li class="rv"><span class="pains__n mono">0{i+1}</span><div><h3>{E(t)}</h3><p>{E(d)}</p></div></li>' for i, (t, d) in enumerate(REALITY))
     leaks = "".join(f'<div class="leak rv"><span>{E(a)}</span><b>{E(b)}{f"<small>{E(s)}</small>" if s else ""}</b></div>' for a, b, s in LEAKS)
     steps = "".join(f'<li class="rv"><span class="mono">Step {i+1}</span><h3>{E(t)}</h3><p>{E(d)}</p></li>' for i, (t, d) in enumerate(STEPS4))
@@ -155,7 +189,7 @@ def render_home(c):
 <h1 class="hero5__h" data-split>Business systems <span class="fire">that work.</span></h1>
 <p class="hero5__p" data-in>Zoho, implemented by Zoho's first Egyptian hire.</p>
 <div class="btnrow" data-in>{btn(c,"Book a free consultation","/book")}<a class="btn btn--line" href="{WA}" target="_blank" rel="noopener"><i class="dot"></i>WhatsApp</a></div>
-<div class="hero5__ex" data-in><span class="mono dim">Ex</span><a class="ex ex--zoho" href="#zoho">Zoho</a><a class="ex" href="#career">Property Finder</a><a class="ex" href="#career">PropSpace</a><a class="ex" href="#career">Motivate</a></div>
+<div class="hero5__ex" data-in><span class="mono dim">Ex</span><a class="ex ex--zoho" href="#zoho">Zoho</a><a class="ex" href="#career">Property Finder</a><a class="ex" href="#career">PropSpace</a><a class="ex" href="#career">Motivate Media Group</a></div>
 </div>
 <figure class="portrait" id="portrait"><img class="portrait__bg" src="{c.asset("img/zoho-tower.webp")}" alt="" fetchpriority="high"><div class="portrait__shade"></div>
 <img class="portrait__cut" src="{c.asset("img/founder-cut.webp")}" alt="Mohamed Refaat, founder of OPSMO, in front of the Zoho tower" fetchpriority="high" width="820" height="979"></figure>
@@ -183,7 +217,7 @@ def render_home(c):
 
 <section class="sec impact"><div class="horizon" aria-hidden="true"></div><div class="wrap">
 <div class="head head--center">{chip("The impact")}<h2 class="h2 rv">Every day without systems <em>is lost margin.</em></h2><p class="lead rv">We audit operational loss before we begin. This is what revenue leaks typically cost a mid-sized business.</p></div>
-<div class="leaks">{leaks}</div><p class="note rv">It isn't about software. It's about operational precision. In 90 days, a competitor could remove the bottlenecks you're still firefighting.</p></div></section>
+{impact_board()}<p class="note rv">It isn't about software. It's about operational precision. In 90 days, a competitor could remove the bottlenecks you're still firefighting.</p></div></section>
 
 {before_after(c)}
 {live_demo(c)}
@@ -192,7 +226,7 @@ def render_home(c):
 {portfolio_block(c)}
 
 <section class="sec" id="solutions"><div class="wrap">
-<div class="head head--split"><div>{chip("What we do")}<h2 class="h2 rv">Ten disciplines. <em>One operating system.</em></h2></div><div><p class="lead rv">Each solution is an operating capability, not a licence sale. Pick one to see what it covers.</p><a class="link rv" {a_attrs(c,"/solutions")}>All 10 solutions {ARROW}</a></div></div>
+<div class="head head--split"><div>{chip("What we do")}<h2 class="h2 rv">Ten services. <em>One connected system.</em></h2></div><div><p class="lead rv">Pick a service to see what it looks like inside your business, and what we set up.</p><a class="link rv" {a_attrs(c,"/solutions")}>All 10 solutions {ARROW}</a></div></div>
 <div class="explorer rv"><div class="explorer__tabs" role="tablist" aria-label="OPSMO solutions">{sol_tabs}</div><div class="explorer__panel">{sol_panels}</div></div></div></section>
 
 {sec(f"""<div class="head head--center">{chip("How we work")}<h2 class="h2 rv">From chaos to control <em>in 90 days.</em></h2></div><ol class="steps4" id="steps4">{steps}</ol><div class="steps4__line" aria-hidden="true"><span id="s4line"></span></div><p class="center rv"><a class="link" {a_attrs(c,"/approach")}>See the full six-stage methodology {ARROW}</a></p>""", "", "method")}
@@ -267,7 +301,13 @@ def footer_html(c):
 <span class="ft__legal"><a {a_attrs(c,"/privacy")}>Privacy Policy</a><a {a_attrs(c,"/terms")}>Terms of Use</a><a href="{c.asset("../sitemap.xml")}">Sitemap</a><a href="#top" class="ft__top-btn">Back to top ↑</a></span></div>
 <p class="ft__fine">Logos belong to their respective owners and describe past roles and client work. Zoho, Property Finder, PropSpace and Motivate Media Group are not affiliated with OPSMO unless stated in writing. Photography: Unsplash and OPSMO.</p>
 </div></footer>
-<a class="wa-fab" href="{WA}" target="_blank" rel="noopener" aria-label="Chat with OPSMO on WhatsApp">{SOC["wa"]}<span>Chat with us</span></a>
+<div class="hook" id="hook" role="dialog" aria-label="Message from Mohamed Refaat" aria-hidden="true">
+<button class="hook__x" type="button" aria-label="Close message">×</button>
+<div class="hook__head"><img src="{c.asset("img/mohamed-avatar.webp")}" alt="Mohamed Refaat" width="48" height="48"><div><b>Mohamed Refaat</b><span><i class="dot"></i>Founder · usually replies in minutes</span></div></div>
+<div class="hook__msgs"><p class="hook__typing" aria-hidden="true"><i></i><i></i><i></i></p><p class="hook__m" id="hookM1"></p><p class="hook__m" id="hookM2"></p></div>
+<div class="hook__cta"><a class="btn btn--fire btn--sm" {a_attrs(c,"/book")} data-hook="book">Book my free call {ARROW}</a><a class="btn btn--line btn--sm" href="{WA}" target="_blank" rel="noopener" data-hook="wa">{SOC["wa"]}WhatsApp me</a></div>
+<p class="hook__fine">Free · 30 minutes · no sales pitch</p></div>
+<button class="hook-fab" id="hookFab" type="button" aria-label="Chat with Mohamed" aria-expanded="false"><img src="{c.asset("img/mohamed-avatar.webp")}" alt="" width="56" height="56"><span class="hook-fab__n" aria-hidden="true">1</span><span class="hook-fab__t">Talk to Mohamed</span></button>
 <div class="mbar"><a class="btn btn--fire btn--sm" {a_attrs(c,"/book")}>Book a Call</a><a class="btn btn--line btn--sm" href="{WA}" target="_blank" rel="noopener">WhatsApp</a></div>'''
 
 # ------------------------------------------------------------------ SEO head
@@ -331,7 +371,7 @@ def page(c, title, body, desc=None, route="/"):
 {footer_html(c)}
 {B.SPRITE}
 <canvas class="globe" id="globe" aria-hidden="true"></canvas>
-<script src="{c.asset("js/main.js")}" defer></script><script src="{c.asset("js/v5.js")}" defer></script><script src="{c.asset("js/globe.js")}" defer></script><script src="{c.asset("js/showcase.js")}" defer></script>
+<script src="{c.asset("js/main.js")}" defer></script><script src="{c.asset("js/v5.js")}" defer></script><script src="{c.asset("js/globe.js")}" defer></script><script src="{c.asset("js/showcase.js")}" defer></script><script src="{c.asset("js/hook.js")}" defer></script>
 </body></html>'''
 
 
@@ -449,8 +489,8 @@ def render_real_estate(c):
 {btns(c,[("Book a free consultation","/book"),("Request an assessment","/contact")])}</div>
 <div class="pstack rv" aria-hidden="true"><span class="pstack__a"></span><span class="pstack__b"></span><figure><img src="{c.asset("img/skyline.webp")}" alt="" fetchpriority="high"></figure></div></div></section>
 {sec(f'<div class="daily"><div class="head head--sticky">{chip("The problem")}<h2 class="h2 rv">Why real-estate teams <em>lose good leads.</em></h2><p class="callout rv">It is rarely the agents. It is the missing system behind them.</p></div><ol class="pains">{pains}</ol></div>')}
-{before_after(c)}
-{live_demo(c)}
+{before_after(c, pick=False)}
+{live_demo(c, pick=False)}
 {sec(head("How it works","One path for every enquiry.", "This is the flow we set up in Zoho CRM. Every step is tracked, so nothing depends on memory.") + f'<ol class="flow">{flow}</ol>')}
 {sec(f"""<div class="pack"><div class="head head--sticky">{chip("What we set up")}<h2 class="h2 rv">Six parts, <em>one owner.</em></h2><p class="lead rv">We own the whole rollout, from setup to training your team in Arabic and English.</p><div class="btnrow">{btn(c,"Scope your rollout","/book")}</div></div><div class="ws rv">{ws}</div></div>""")}
 {sec(f"""<div class="head">{chip("Why us")}<h2 class="h2 rv">We have worked <em>on the portal side.</em></h2><p class="lead rv">Mohamed spent two stints at Property Finder Group and led PropSpace's move from Salesforce to Zoho One.</p></div>
@@ -504,6 +544,7 @@ B.nav_html = nav_html; B.footer_html = footer_html; B.cta_block = cta_block; B.r
 
 # ---- v6 plain-English copy
 import copy6, shared
+from screens import screen
 from showcase import live_demo, before_after, savings_calc, rollout, suite_map
 for _k, _v in copy6.SOL_COPY.items():
     if _k in SOL: SOL[_k].update(_v)
@@ -566,7 +607,7 @@ def main():
     write("/contact", "Contact OPSMO — Book a Call or WhatsApp | Dubai", render_contact_merged,
           "Book a free 30-minute call, message OPSMO on WhatsApp, or request a written operational assessment. Dubai, serving the UAE and GCC.")
     write("/success-stories", "Success Stories — Zoho One Transformations in the UAE & GCC | OPSMO", render_stories_page,
-          "How PropSpace, Elnaggar & Partners, R1 Performance and Fawry Microfinance moved from spreadsheets and WhatsApp to one Zoho One operating system.")
+          "How a PropTech platform, a law firm, a performance car workshop and a microfinance lender moved from spreadsheets and WhatsApp to one Zoho One system.")
     for old, new in REDIR.items(): write_redirect(old, new)
     c = Ctx("/")
     p404 = page(c, "Page not found | OPSMO", f'<section class="phero"><div class="wrap"><div class="phero__copy">{chip("404")}<h1 class="phero__h">This page <em>isn\'t here.</em></h1><p class="phero__p">The link may be out of date. Try the homepage or book a call.</p>{btns(c,[("Back to home","/"),("Book a Call","/book")])}</div></div></section>', "The page you were looking for could not be found.", "/404")

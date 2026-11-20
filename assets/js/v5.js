@@ -49,7 +49,8 @@
         if (!/^\d/.test(part)) { if (part) frag.appendChild(document.createTextNode(part)); return; }
         const comma = part.includes(','), raw = part.replace(/,/g, ''), dec = (raw.split('.')[1] || '').length, to = parseFloat(raw);
         const sp = document.createElement('span'); sp.className = 'cnt'; sp.textContent = part;
-        sp.dataset.to = to; sp.dataset.dec = dec; sp.dataset.comma = comma ? 1 : '';
+        const yr = to >= 1900 && to <= 2100 && !dec && !comma;
+        sp.dataset.to = to; sp.dataset.dec = dec; sp.dataset.comma = (comma || (to >= 10000 && !yr)) ? 1 : '';
         sp.dataset.from = (to >= 1900 && to <= 2100 && !dec) ? to - 17 : 0;   // years tick up, not from zero
         frag.appendChild(sp);
       });
@@ -107,7 +108,7 @@
     }
     if (hor) { const r = hor.parentElement.getBoundingClientRect(); hor.parentElement.style.setProperty('--hp', Math.min(1, Math.max(0, 1 - r.top / vh))); }
     const y = scrollY > vh * .7;
-    fab && fab.classList.toggle('is-on', y); mbar && mbar.classList.toggle('is-on', y);
+    mbar && mbar.classList.toggle('is-on', y);
   };
   const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(frame); } };
   addEventListener('scroll', onScroll, { passive: true }); addEventListener('resize', onScroll); frame();

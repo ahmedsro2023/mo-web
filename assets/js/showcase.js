@@ -5,32 +5,36 @@
   const onView = (el, fn, th = .25) => { if (!el) return; const io = new IntersectionObserver(es => es.forEach(e => fn(e.isIntersecting)), { threshold: th }); io.observe(el); };
   const fmt = n => Math.round(n).toLocaleString('en-US');
 
+  /* ---------- shared sector data + picker ---------- */
+  const dataEl = $('.sector-data'); const SD = dataEl ? JSON.parse(dataEl.textContent) : {};
+  let SECTOR = (($('#liveDemo') || $('#beforeAfter') || {}).dataset || {}).sector || 'real-estate';
+  const setSector = k => { if (!SD[k]) return; SECTOR = k;
+    $$('.sp__chip').forEach(b => { const on = b.dataset.sector === k; b.classList.toggle('is-on', on); b.setAttribute('aria-pressed', on); });
+    document.dispatchEvent(new CustomEvent('opsmo:sector', { detail: k })); };
+  $$('.sp__chip').forEach(b => b.addEventListener('click', () => setSector(b.dataset.sector)));
+
   /* ---------- live pipeline ---------- */
   const lv = $('#liveDemo');
-  if (lv) {
-    const SRC = ['Property Finder', 'Bayut', 'Website form', 'Meta ad', 'WhatsApp', 'Referral'];
-    const WHAT = ['2BR · Dubai Marina', 'Villa · Al Furjan', '1BR · JVC', 'Office · Business Bay', 'Studio · Downtown', '3BR · Arabian Ranches', 'Townhouse · Damac Hills', '2BR · Creek Harbour'];
-    const WHO = ['Sara', 'Omar', 'Lina', 'Yousef', 'Maya', 'Karim'];
-    const feed = $('#lvFeed'), cols = $$('.lv__col', lv), k = { leads: $('#kLeads'), resp: $('#kResp'), tasks: $('#kTasks'), won: $('#kWon') };
-    let leads = 0, won = 0, tasks = 0, resp = [], spark = [], timer = null, id = 0;
+  if (lv && SD[SECTOR]) {
+    const WHO = ['Sara', 'Omar', 'Lina', 'Yousef', 'Maya', 'Karim', 'Noor', 'Adam'];
+    const feed = $('#lvFeed'), cols = $$('.lv__col', lv), k = { leads: $('#kLeads'), resp: $('#kResp'), tasks: $('#kTasks'), won: $('#kWon'), wonL: $('#kWonL') };
+    let leads, won, tasks, resp, spark, timer = null, visible = false;
     const pick = a => a[Math.floor(Math.random() * a.length)];
     const count = () => cols.forEach(cl => $('[data-colcount]', cl).textContent = $$('.lv__card', cl).length);
     const card = (what, src, who) => { const d = document.createElement('div'); d.className = 'lv__card'; d.innerHTML = `<b>${what}</b><span>${src}</span><i>${who[0]}</i>`; return d; };
     const tick = () => {
-      // 1) a new lead arrives
-      const src = pick(SRC), what = pick(WHAT), who = pick(WHO), secs = 3 + Math.floor(Math.random() * 9);
+      const S = SD[SECTOR], src = pick(S.sources), what = pick(S.items), who = pick(WHO), secs = 3 + Math.floor(Math.random() * 9);
       leads++; resp.push(secs); if (resp.length > 20) resp.shift();
       const li = document.createElement('li');
       li.innerHTML = `<span class="lv__src">${src}</span><b>${what}</b><span class="lv__ok">Assigned to ${who} · ${secs}s</span>`;
       feed.prepend(li); requestAnimationFrame(() => li.classList.add('is-in'));
       while (feed.children.length > 5) feed.lastElementChild.remove();
       const cd = card(what, src, who); $('.lv__cards', cols[0]).prepend(cd); requestAnimationFrame(() => cd.classList.add('is-in'));
-      // 2) move one card forward somewhere in the pipeline
       for (let i = cols.length - 2; i >= 0; i--) {
         const cs = $$('.lv__card', cols[i]);
         if (cs.length && Math.random() < (i === 0 ? .7 : .45)) {
           const m = cs[cs.length - 1]; m.classList.add('is-move');
-          setTimeout(() => { m.classList.remove('is-move', 'is-in'); $('.lv__cards', cols[i + 1]).prepend(m); requestAnimationFrame(() => m.classList.add('is-in')); if (i + 1 === cols.length - 1) { won++; m.classList.add('is-won'); } count(); }, 450);
+          setTimeout(() => { if (!m.isConnected) return; m.classList.remove('is-move', 'is-in'); $('.lv__cards', cols[i + 1]).prepend(m); requestAnimationFrame(() => m.classList.add('is-in')); if (i + 1 === cols.length - 1) { won++; m.classList.add('is-won'); k.won.textContent = won; } count(); }, 450);
           tasks++; break;
         }
       }
@@ -39,42 +43,56 @@
       k.leads.textContent = leads; k.won.textContent = won; k.tasks.textContent = Math.max(0, tasks - won);
       k.resp.textContent = Math.round(resp.reduce((a, b) => a + b, 0) / resp.length) + 's';
       spark.push(secs); if (spark.length > 24) spark.shift();
-      const d = spark.map((v, i) => `${i ? 'L' : 'M'}${(i / 23) * 200} ${60 - v * 4.5}`).join(' ');
-      $('#lvSpark').setAttribute('d', d);
+      $('#lvSpark').setAttribute('d', spark.map((v, i) => `${i ? 'L' : 'M'}${(i / 23) * 200} ${60 - v * 4.5}`).join(' '));
     };
-    for (let i = 0; i < 6; i++) tick();
-    onView(lv, v => { if (v && !timer && !reduce) timer = setInterval(tick, 2300); if (!v && timer) { clearInterval(timer); timer = null; } });
+    const reset = () => {
+      const S = SD[SECTOR]; leads = 0; won = 0; tasks = 0; resp = []; spark = [];
+      feed.innerHTML = ''; $$('.lv__cards', lv).forEach(c => c.innerHTML = '');
+      cols.forEach((cl, i) => { const h = $('.lv__ch', cl); h.firstChild.textContent = S.stages[i]; });
+      k.wonL.textContent = S.won; lv.classList.remove('is-swap'); void lv.offsetWidth; lv.classList.add('is-swap');
+      for (let i = 0; i < 6; i++) tick();
+    };
+    reset();
+    const play = () => { if (visible && !timer && !reduce) timer = setInterval(tick, 2300); };
+    onView(lv, v => { visible = v; if (v) play(); else if (timer) { clearInterval(timer); timer = null; } });
+    document.addEventListener('opsmo:sector', () => { clearInterval(timer); timer = null; reset(); play(); });
   }
 
   /* ---------- before / after ---------- */
   const ba = $('#beforeAfter');
-  if (ba) {
-    const clock = $('#baClock'), verdict = $('#baVerdict'); let raf, auto = true;
-    const T = { before: [15600, '4h 20m', 'Lead lost'], after: [6, '6 seconds', 'Lead contacted'] };
-    const show = mode => {
-      ba.dataset.mode = mode;
-      $$('.ba__switch button', ba).forEach(b => b.setAttribute('aria-selected', b.dataset.mode === mode));
-      const lane = $(`.ba__lane--${mode}`, ba);
+  if (ba && SD[SECTOR]) {
+    const clock = $('#baClock'), verdict = $('#baVerdict'), metric = $('#baMetric'), gain = $('#baGain'); let raf, auto = true, mode = 'before', timers = [];
+    const fmtT = s => s >= 86400 ? `${Math.max(1, Math.round(s / 86400))} day${Math.round(s / 86400) > 1 ? 's' : ''}` : s >= 3600 ? `${Math.floor(s / 3600)}h ${Math.floor(s % 3600 / 60)}m` : s >= 60 ? `${Math.floor(s / 60)}m ${Math.floor(s % 60)}s` : `${Math.floor(s)}s`;
+    const lanes = () => { const S = SD[SECTOR];
+      ['before', 'after'].forEach(m => { $(`.ba__lane--${m}`, ba).innerHTML = S[m].steps.map(([t, h, p]) => `<li><span class="ba__t mono">${t}</span><div><b>${h}</b><p>${p}</p></div></li>`).join(''); });
+      metric.textContent = S.metric; };
+    const show = m => {
+      mode = m; const S = SD[SECTOR]; ba.dataset.mode = m;
+      $$('.ba__switch button', ba).forEach(b => b.setAttribute('aria-selected', b.dataset.mode === m));
+      timers.forEach(clearTimeout); timers = [];
       $$('.ba__lane li', ba).forEach(li => li.classList.remove('is-on'));
-      $$('li', lane).forEach((li, i) => setTimeout(() => li.classList.add('is-on'), reduce ? 0 : 250 + i * 420));
-      cancelAnimationFrame(raf); verdict.classList.remove('is-on');
-      const [secs, label, v] = T[mode], t0 = performance.now(), dur = reduce ? 0 : 2200;
-      const step = now => { const p = dur ? Math.min(1, (now - t0) / dur) : 1, s = secs * (1 - Math.pow(1 - p, 3));
-        clock.textContent = p < 1 ? (s >= 3600 ? `${Math.floor(s / 3600)}h ${Math.floor(s % 3600 / 60)}m` : s >= 60 ? `${Math.floor(s / 60)}m ${Math.floor(s % 60)}s` : `${Math.floor(s)}s`) : label;
-        if (p < 1) raf = requestAnimationFrame(step); else { verdict.textContent = v; verdict.classList.add('is-on'); } };
+      $$(`.ba__lane--${m} li`, ba).forEach((li, i) => timers.push(setTimeout(() => li.classList.add('is-on'), reduce ? 0 : 250 + i * 420)));
+      cancelAnimationFrame(raf); verdict.classList.remove('is-on'); gain.classList.remove('is-on');
+      const { total, label, verdict: v } = S[m], t0 = performance.now(), dur = reduce ? 0 : 2200;
+      const step = now => { const p = dur ? Math.min(1, (now - t0) / dur) : 1;
+        clock.textContent = p < 1 ? fmtT(total * (1 - Math.pow(1 - p, 3))) : label;
+        if (p < 1) raf = requestAnimationFrame(step);
+        else { verdict.textContent = v; verdict.classList.add('is-on');
+          if (m === 'after') { const pct = Math.min(99, Math.round((1 - S.after.total / S.before.total) * 100)); gain.innerHTML = `<b>${pct}%</b> less waiting`; gain.classList.add('is-on'); } } };
       raf = requestAnimationFrame(step);
     };
     $$('.ba__switch button', ba).forEach(b => b.addEventListener('click', () => { auto = false; show(b.dataset.mode); }));
     let played = false;
-    onView(ba, v => { if (v && !played) { played = true; show('before'); setTimeout(() => auto && show('after'), 4600); } }, .4);
+    onView(ba, v => { if (v && !played) { played = true; lanes(); show('before'); timers.push(setTimeout(() => auto && show('after'), 4600)); } }, .4);
+    document.addEventListener('opsmo:sector', () => { lanes(); auto = true; played = true; show('before'); timers.push(setTimeout(() => auto && show('after'), 4200)); });
   }
 
   /* ---------- calculator ---------- */
   const calc = $('#calc');
   if (calc) {
-    const get = id => +$('#' + id).value, out = {}; let shown = { h: 0, a: 0, f: 0 }, raf;
+    const get = id => +$('#' + id).value; let shown = { h: 0, a: 0, f: 0 }, raf, sraf;
     const animate = (to) => { cancelAnimationFrame(raf); const from = { ...shown }, t0 = performance.now();
-      const step = now => { const p = Math.min(1, (now - t0) / 500), e = 1 - Math.pow(1 - p, 3);
+      const step = now => { const p = Math.min(1, (now - t0) / 600), e = 1 - Math.pow(1 - p, 3);
         shown = { h: from.h + (to.h - from.h) * e, a: from.a + (to.a - from.a) * e, f: from.f + (to.f - from.f) * e };
         $('#oHours').textContent = fmt(shown.h); $('#oAed').textContent = fmt(shown.a); $('#oFte').textContent = shown.f.toFixed(1);
         if (p < 1) raf = requestAnimationFrame(step); };
@@ -86,8 +104,22 @@
       $('#oBar').style.width = Math.min(100, get('cCut')) + '%';
     };
     $$('input[type=range]', calc).forEach(i => i.addEventListener('input', run));
+    const preset = key => { const P = SD[key] && SD[key].calc; if (!P) return; const ids = { cTeam: P.team, cHours: P.hours, cRate: P.rate, cCut: P.cut };
+      const from = {}; Object.keys(ids).forEach(id => from[id] = get(id)); const t0 = performance.now(); cancelAnimationFrame(sraf);
+      const step = now => { const p = Math.min(1, (now - t0) / 700), e = 1 - Math.pow(1 - p, 3);
+        Object.keys(ids).forEach(id => { const el = $('#' + id), st = +el.step || 1; el.value = Math.round((from[id] + (ids[id] - from[id]) * e) / st) * st; });
+        run(); if (p < 1) sraf = requestAnimationFrame(step); };
+      sraf = requestAnimationFrame(step); };
+    document.addEventListener('opsmo:sector', e => preset(e.detail));
     let first = true; onView(calc, v => { if (v && first) { first = false; run(); } });
   }
+
+  /* ---------- impact board ---------- */
+  const ib = $('#impactBoard');
+  if (ib) onView(ib, v => { if (!v || ib.classList.contains('is-on')) return; ib.classList.add('is-on');
+    const el = $('#lkMoney'), t0 = performance.now(), dur = reduce ? 0 : 1900;
+    const step = now => { const p = dur ? Math.min(1, (now - t0) / dur) : 1; el.textContent = Math.round(500 * (1 - Math.pow(1 - p, 3))); if (p < 1) requestAnimationFrame(step); };
+    requestAnimationFrame(step); }, .3);
 
   /* ---------- rollout (scroll-scrubbed) ---------- */
   const ro = $('#rollout');
