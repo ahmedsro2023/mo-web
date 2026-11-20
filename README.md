@@ -51,3 +51,7 @@ Rebuild: `cd _src && OUT=.. python3 site5.py && cp -r assets ..` (assets live in
 - Old URLs keep working: redirect pages in the old folders (GitHub Pages) + 301s in `vercel.json` (Vercel).
 - Forms: until `FORM_ENDPOINT` is set in `assets/js/main.js`, submissions open WhatsApp with the filled-in details.
 - Rebuild: `cd _src && OUT=.. python3 site5.py && cp -r assets favicon.ico ..` (videos live in `/assets/video`, not in `_src`).
+
+## v7 — dynamic showcase
+- `showcase.py` + `assets/js/showcase.js`: live CRM pipeline (sample data), before/after lead journey, time & cost calculator, 12-week rollout timeline (scroll-scrubbed), Zoho One department map.
+- Home: before/after, live pipeline, calculator. Zoho page: department map, rollout, calculator. Real estate: before/after, live pipeline. How We Work: rollout.

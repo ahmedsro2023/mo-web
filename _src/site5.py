@@ -185,6 +185,8 @@ def render_home(c):
 <div class="head head--center">{chip("The impact")}<h2 class="h2 rv">Every day without systems <em>is lost margin.</em></h2><p class="lead rv">We audit operational loss before we begin. This is what revenue leaks typically cost a mid-sized business.</p></div>
 <div class="leaks">{leaks}</div><p class="note rv">It isn't about software. It's about operational precision. In 90 days, a competitor could remove the bottlenecks you're still firefighting.</p></div></section>
 
+{before_after(c)}
+{live_demo(c)}
 {stories_block(c)}
 {videos_block(c)}
 {portfolio_block(c)}
@@ -194,6 +196,7 @@ def render_home(c):
 <div class="explorer rv"><div class="explorer__tabs" role="tablist" aria-label="OPSMO solutions">{sol_tabs}</div><div class="explorer__panel">{sol_panels}</div></div></div></section>
 
 {sec(f"""<div class="head head--center">{chip("How we work")}<h2 class="h2 rv">From chaos to control <em>in 90 days.</em></h2></div><ol class="steps4" id="steps4">{steps}</ol><div class="steps4__line" aria-hidden="true"><span id="s4line"></span></div><p class="center rv"><a class="link" {a_attrs(c,"/approach")}>See the full six-stage methodology {ARROW}</a></p>""", "", "method")}
+{savings_calc(c)}
 
 {sec(f"""<div class="pack"><div class="head head--sticky">{chip("Zoho implementation & integration")}<h2 class="h2 rv">One owner, <em>from setup to adoption.</em></h2><p class="lead rv">A real-estate Zoho CRM rollout as we scope it: hands-on ownership from setup and customisation through testing, launch and team adoption — in Arabic and English.</p><div class="btnrow">{btn(c,"Scope your rollout","/book")}{btn(c,"Real estate workflow","/industries/real-estate","line")}</div></div><div class="ws rv">{ws}</div></div>""")}
 
@@ -328,7 +331,7 @@ def page(c, title, body, desc=None, route="/"):
 {footer_html(c)}
 {B.SPRITE}
 <canvas class="globe" id="globe" aria-hidden="true"></canvas>
-<script src="{c.asset("js/main.js")}" defer></script><script src="{c.asset("js/v5.js")}" defer></script><script src="{c.asset("js/globe.js")}" defer></script>
+<script src="{c.asset("js/main.js")}" defer></script><script src="{c.asset("js/v5.js")}" defer></script><script src="{c.asset("js/globe.js")}" defer></script><script src="{c.asset("js/showcase.js")}" defer></script>
 </body></html>'''
 
 
@@ -446,6 +449,8 @@ def render_real_estate(c):
 {btns(c,[("Book a free consultation","/book"),("Request an assessment","/contact")])}</div>
 <div class="pstack rv" aria-hidden="true"><span class="pstack__a"></span><span class="pstack__b"></span><figure><img src="{c.asset("img/skyline.webp")}" alt="" fetchpriority="high"></figure></div></div></section>
 {sec(f'<div class="daily"><div class="head head--sticky">{chip("The problem")}<h2 class="h2 rv">Why real-estate teams <em>lose good leads.</em></h2><p class="callout rv">It is rarely the agents. It is the missing system behind them.</p></div><ol class="pains">{pains}</ol></div>')}
+{before_after(c)}
+{live_demo(c)}
 {sec(head("How it works","One path for every enquiry.", "This is the flow we set up in Zoho CRM. Every step is tracked, so nothing depends on memory.") + f'<ol class="flow">{flow}</ol>')}
 {sec(f"""<div class="pack"><div class="head head--sticky">{chip("What we set up")}<h2 class="h2 rv">Six parts, <em>one owner.</em></h2><p class="lead rv">We own the whole rollout, from setup to training your team in Arabic and English.</p><div class="btnrow">{btn(c,"Scope your rollout","/book")}</div></div><div class="ws rv">{ws}</div></div>""")}
 {sec(f"""<div class="head">{chip("Why us")}<h2 class="h2 rv">We have worked <em>on the portal side.</em></h2><p class="lead rv">Mohamed spent two stints at Property Finder Group and led PropSpace's move from Salesforce to Zoho One.</p></div>
@@ -499,6 +504,7 @@ B.nav_html = nav_html; B.footer_html = footer_html; B.cta_block = cta_block; B.r
 
 # ---- v6 plain-English copy
 import copy6, shared
+from showcase import live_demo, before_after, savings_calc, rollout, suite_map
 for _k, _v in copy6.SOL_COPY.items():
     if _k in SOL: SOL[_k].update(_v)
 B.METHOD[:] = copy6.METHOD; B.RECEIVE[:] = copy6.RECEIVE
@@ -518,6 +524,18 @@ def write(route, title, body, desc=None):
     ROUTES.append(route); return route
 B.write = write
 
+INJECT = {"/platforms/zoho": [("before", '<p class="chip rv">HOW WE SET IT UP</p>', lambda c: suite_map(c)), ("before", '<section class="ctax"', lambda c: rollout(c) + savings_calc(c))],
+          "/approach": [("after_stages", None, lambda c: rollout(c))]}
+def inject(c, route, h):
+    for where, marker, fn in INJECT.get(route, []):
+        if where == "after_stages":
+            j = h.find('<p class="chip rv">HOW WE THINK</p>'); i = h.rfind('<section', 0, j) if j > 0 else -1
+        else:
+            if marker.startswith('<section class="ctax"'): i = h.rfind(marker)
+            else: i = h.rfind('<section', 0, h.find(marker)) if h.find(marker) > 0 else -1
+        if i > 0: h = h[:i] + fn(c) + h[i:]
+    return h
+
 def write_redirect(old, new):
     c = Ctx(old)
     target = c.href(new)
@@ -536,7 +554,7 @@ def main():
             meta, body = B.parse_md(full)
             if rel.startswith("insights/") and fn != "index.md":
                 write(route, meta["title"], lambda c, f=full: B.render_article(c, f), meta["deck"]); continue
-            write(route, meta["title"], lambda c, m=meta, b=body: B.render_body(c, m, b))
+            write(route, meta["title"], lambda c, m=meta, b=body, r=route: inject(c, r, B.render_body(c, m, b)))
     for x in SOL:
         write("/solutions/" + x, SOL[x]["doc"], lambda c, x=x: render_solution(c, x), SOL[x]["tagline"])
     write("/about", "About OPSMO & Founder Mohamed Refaat — Ex-Zoho, Dubai | OPSMO", render_about,
