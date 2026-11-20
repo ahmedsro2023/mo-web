@@ -52,7 +52,7 @@ SECTORS = [("r1-w","4M+ AED ARR","Automotive"),("elnaggar-w","500K+ USD ARR","Le
            ("propspace-w","650K+ USD ARR","PropTech · real estate"),("twaasol-w","30M+ USD revenue","IT services & consulting"),("lucky-w","2M+ USD revenue","Financial services")]
 
 # ---- client confidentiality: set True to show client names and sharp logos again
-SHOW_CLIENT_NAMES = False
+SHOW_CLIENT_NAMES = True
 PUBLIC_LOGOS = {"propertyfinder-w", "propspace-w", "zohoone-w", "zohoone-c", "uaestories"}   # employers / public partners
 ANON = {"elnaggar": ("Corporate law firm", "the firm"),
         "r1-performance": ("Performance car workshop", "the workshop"), "fawry": ("Microfinance lender", "the lender")}
@@ -607,7 +607,7 @@ def main():
     write("/contact", "Contact OPSMO — Book a Call or WhatsApp | Dubai", render_contact_merged,
           "Book a free 30-minute call, message OPSMO on WhatsApp, or request a written operational assessment. Dubai, serving the UAE and GCC.")
     write("/success-stories", "Success Stories — Zoho One Transformations in the UAE & GCC | OPSMO", render_stories_page,
-          "How a PropTech platform, a law firm, a performance car workshop and a microfinance lender moved from spreadsheets and WhatsApp to one Zoho One system.")
+          ("How PropSpace, Elnaggar & Partners, R1 Performance and Fawry Microfinance moved from spreadsheets and WhatsApp to one Zoho One system." if SHOW_CLIENT_NAMES else "How a PropTech platform, a law firm, a performance car workshop and a microfinance lender moved from spreadsheets and WhatsApp to one Zoho One system."))
     for old, new in REDIR.items(): write_redirect(old, new)
     c = Ctx("/")
     p404 = page(c, "Page not found | OPSMO", f'<section class="phero"><div class="wrap"><div class="phero__copy">{chip("404")}<h1 class="phero__h">This page <em>isn\'t here.</em></h1><p class="phero__p">The link may be out of date. Try the homepage or book a call.</p>{btns(c,[("Back to home","/"),("Book a Call","/book")])}</div></div></section>', "The page you were looking for could not be found.", "/404")

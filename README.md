@@ -62,3 +62,7 @@ Rebuild: `cd _src && OUT=.. python3 site5.py && cp -r assets ..` (assets live in
 - Client confidentiality: `SHOW_CLIENT_NAMES = False` in `site5.py` blurs client logos and anonymises names. Set to True to show them.
 - Light animated app screens per solution in the home explorer (`screens.py`).
 - Message from Mohamed (`assets/js/hook.js`): opens after 18s, half-page scroll or exit intent; once per visit, snoozed 3 days when closed.
+
+## v9
+- Before/after is now "the race": a live split-screen simulation (Excel + WhatsApp vs OPSMO CRM) with dual clocks, typing spreadsheet, chat, stamps, race bars and a replay button. Sector-aware.
+- Client names and logos shown again (`SHOW_CLIENT_NAMES = True`).

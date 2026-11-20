@@ -26,17 +26,40 @@ def live_demo(c, sector="real-estate", pick=True):
 
 def before_after(c, sector="real-estate", pick=True):
     d = SECTORS[sector]
-    def lane(x, cls):
-        return f'<ol class="ba__lane {cls}">' + "".join(f'<li><span class="ba__t mono">{E(t)}</span><div><b>{E(h)}</b><p>{E(p)}</p></div></li>' for t, h, p in x["steps"]) + "</ol>"
-    return sec(f'''<div class="head head--center">{chip("Before and after")}<h2 class="h2 rv">The same request. <em>Two very different days.</em></h2>
-<p class="lead rv">Switch between a typical setup and one we build, and watch the clock.</p></div>
+    rows = [("Ahmed K.", "Website", "050 •••", "Called?", "—"), ("Sara M.", "Referral", "055 •••", "?", "Omar"),
+            ("Ahmed K.", "Website", "050 •••", "DUPLICATE", "—"), ("J. Smith", "Portal", "#N/A", "Follow up", "?"), ("Fatima A.", "WhatsApp", "052 •••", "", "")]
+    grid = "".join(f'<tr class="xl__r{" xl__r--dup" if r[3]=="DUPLICATE" else ""}"><td>{i+2}</td>' + "".join(f"<td>{E(x)}</td>" for x in r) + "</tr>" for i, r in enumerate(rows))
+    after = "".join(f'<li><i></i><span class="mono">{E(t)}</span><b>{E(h)}</b></li>' for t, h, p in d["after"]["steps"])
+    return sec(f'''<div class="head head--center">{chip("Before and after")}<h2 class="h2 rv">One request. Two teams. <em>Watch the race.</em></h2>
+<p class="lead rv">The same request arrives at two companies at the same moment. One runs on spreadsheets and WhatsApp. The other runs on a system we built.</p></div>
 {picker(sector) if pick else ""}
-<div class="ba rv" id="beforeAfter" data-mode="before" data-sector="{sector}">{sector_data()}
-<div class="ba__switch" role="tablist" aria-label="Compare"><button role="tab" aria-selected="true" data-mode="before">Today: WhatsApp &amp; Excel</button><button role="tab" aria-selected="false" data-mode="after">With an OPSMO system</button><i class="ba__pill" aria-hidden="true"></i></div>
-<div class="ba__stage"><div class="ba__clock"><span class="mono dim" id="baMetric">{E(d["metric"])}</span><b id="baClock">{E(d["before"]["label"])}</b><span class="ba__verdict" id="baVerdict">{E(d["before"]["verdict"])}</span>
-<div class="ba__gain" id="baGain"></div></div>
-<div class="ba__lanes">{lane(d["before"], "ba__lane--before")}{lane(d["after"], "ba__lane--after")}</div></div></div>
-<p class="fine rv center">Illustrative example. Your timings will differ.</p>''', "", "before-after")
+<div class="race rv" id="race" data-sector="{sector}">{sector_data()}
+<div class="race__dual" aria-hidden="true"><span class="race__dl">Today <b id="dualL">0:00</b></span><span class="race__dr">OPSMO <b id="dualR">0:00</b></span></div>
+<div class="race__side race__side--old">
+<div class="race__top"><span class="race__tag">Today</span><span class="mono">Excel + WhatsApp</span><span class="race__clock"><small id="rcMetricL">{E(d["metric"])}</small><b id="rcClockL">0:00</b></span></div>
+<div class="xl"><div class="xl__bar"><span class="xl__ic">X</span><span>leads_FINAL_v3 (2).xlsx</span><em id="xlSave">Not saved</em></div>
+<div class="xl__fx"><span>fx</span><span id="xlFx"></span></div>
+<table><thead><tr><th></th><th>A · Name</th><th>B · Source</th><th>C · Phone</th><th>D · Status</th><th>E · Owner</th></tr></thead><tbody id="xlBody">{grid}<tr class="xl__r xl__r--new" id="xlNew"><td>7</td><td id="xlA"></td><td id="xlB"></td><td id="xlC"></td><td id="xlD"></td><td id="xlE"></td></tr></tbody></table></div>
+<div class="wa2" id="waChat"><div class="wa2__h"><b>Sales Team 🏢</b><span>12 participants</span></div><div class="wa2__body" id="waBody"></div></div>
+<ol class="race__log" id="logOld"></ol>
+<div class="race__stamp" id="stampOld">{E(d["before"]["verdict"])}</div>
+</div>
+<div class="race__vs" aria-hidden="true"><span>VS</span></div>
+<div class="race__side race__side--new">
+<div class="race__top"><span class="race__tag race__tag--new">With OPSMO</span><span class="mono">Zoho CRM</span><span class="race__clock race__clock--new"><small id="rcMetricR">{E(d["metric"])}</small><b id="rcClockR">0:00</b></span></div>
+<div class="crm"><div class="crm__card" id="crmCard"><div class="crm__h"><span class="crm__src" id="crmSrc">Property Finder</span><span class="crm__st" id="crmSt">New</span></div>
+<b class="crm__name" id="crmName">Ahmed Khalil</b><p class="crm__what" id="crmWhat">2BR · Dubai Marina</p>
+<div class="crm__f"><span>Owner</span><b id="crmOwner"><i>S</i>Sara</b></div><div class="crm__f"><span>Next step</span><b id="crmNext">Call within 5 min</b></div></div>
+<div class="crm__push" id="crmPush"><b>New lead assigned</b><span id="crmPushT">Ahmed Khalil · tap to call</span></div>
+<ul class="crm__steps" id="crmSteps">{after}</ul>
+<div class="crm__q"><span class="mono">Handled during this demo</span><b id="crmCount">0</b><div class="crm__feed" id="crmFeed"></div></div></div>
+<div class="race__stamp race__stamp--ok" id="stampNew">{E(d["after"]["verdict"])}</div>
+</div>
+<div class="race__end" id="raceEnd"><div class="race__bars"><div><span>Today</span><i class="race__b race__b--old" id="barOld"></i><b id="endOld">{E(d["before"]["label"])}</b></div>
+<div><span>OPSMO</span><i class="race__b race__b--new" id="barNew"></i><b id="endNew">{E(d["after"]["label"])}</b></div></div>
+<div class="race__gain"><b id="raceGain">99%</b><span>less waiting</span></div><button type="button" class="btn btn--line btn--sm" id="raceReplay">↻ Run it again</button></div>
+</div>
+<p class="fine rv center">Illustrative simulation, sped up. Your timings will differ.</p>''', "", "before-after")
 
 def savings_calc(c, sector="real-estate", pick=True):
     cv = SECTORS[sector]["calc"]

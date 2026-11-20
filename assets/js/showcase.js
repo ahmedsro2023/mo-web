@@ -58,33 +58,75 @@
     document.addEventListener('opsmo:sector', () => { clearInterval(timer); timer = null; reset(); play(); });
   }
 
-  /* ---------- before / after ---------- */
-  const ba = $('#beforeAfter');
-  if (ba && SD[SECTOR]) {
-    const clock = $('#baClock'), verdict = $('#baVerdict'), metric = $('#baMetric'), gain = $('#baGain'); let raf, auto = true, mode = 'before', timers = [];
-    const fmtT = s => s >= 86400 ? `${Math.max(1, Math.round(s / 86400))} day${Math.round(s / 86400) > 1 ? 's' : ''}` : s >= 3600 ? `${Math.floor(s / 3600)}h ${Math.floor(s % 3600 / 60)}m` : s >= 60 ? `${Math.floor(s / 60)}m ${Math.floor(s % 60)}s` : `${Math.floor(s)}s`;
-    const lanes = () => { const S = SD[SECTOR];
-      ['before', 'after'].forEach(m => { $(`.ba__lane--${m}`, ba).innerHTML = S[m].steps.map(([t, h, p]) => `<li><span class="ba__t mono">${t}</span><div><b>${h}</b><p>${p}</p></div></li>`).join(''); });
-      metric.textContent = S.metric; };
-    const show = m => {
-      mode = m; const S = SD[SECTOR]; ba.dataset.mode = m;
-      $$('.ba__switch button', ba).forEach(b => b.setAttribute('aria-selected', b.dataset.mode === m));
-      timers.forEach(clearTimeout); timers = [];
-      $$('.ba__lane li', ba).forEach(li => li.classList.remove('is-on'));
-      $$(`.ba__lane--${m} li`, ba).forEach((li, i) => timers.push(setTimeout(() => li.classList.add('is-on'), reduce ? 0 : 250 + i * 420)));
-      cancelAnimationFrame(raf); verdict.classList.remove('is-on'); gain.classList.remove('is-on');
-      const { total, label, verdict: v } = S[m], t0 = performance.now(), dur = reduce ? 0 : 2200;
-      const step = now => { const p = dur ? Math.min(1, (now - t0) / dur) : 1;
-        clock.textContent = p < 1 ? fmtT(total * (1 - Math.pow(1 - p, 3))) : label;
-        if (p < 1) raf = requestAnimationFrame(step);
-        else { verdict.textContent = v; verdict.classList.add('is-on');
-          if (m === 'after') { const pct = Math.min(99, Math.round((1 - S.after.total / S.before.total) * 100)); gain.innerHTML = `<b>${pct}%</b> less waiting`; gain.classList.add('is-on'); } } };
-      raf = requestAnimationFrame(step);
+  /* ---------- the race: spreadsheet + WhatsApp vs OPSMO system ---------- */
+  const race = $('#race');
+  if (race && SD[SECTOR]) {
+    const NAMES = ['Ahmed Khalil', 'Sara Haddad', 'Omar Nasser', 'Lina Farouk', 'Yousef Ali', 'Maya Saeed', 'Karim Adel', 'Noor Hamdan', 'Adam Rashid', 'Hala Mansour', 'Rami Aziz', 'Dana Yasin', 'Tariq Fahd', 'Reem Kamal'];
+    const OWN = ['Sara', 'Omar', 'Lina', 'Yousef', 'Maya'];
+    const E = id => document.getElementById(id);
+    let T = [], raf = [], running = false, played = false;
+    const later = (ms, fn) => T.push(setTimeout(fn, reduce ? 0 : ms));
+    const stop = () => { T.forEach(clearTimeout); T = []; raf.forEach(cancelAnimationFrame); raf = []; running = false; };
+    const fmtT = s => s >= 86400 ? `${Math.floor(s / 86400)}d ${Math.floor(s % 86400 / 3600)}h` : s >= 3600 ? `${Math.floor(s / 3600)}h ${String(Math.floor(s % 3600 / 60)).padStart(2, '0')}m` : `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
+    const clock = (el, total, ms, done) => { const t0 = performance.now();
+      const mir = E(el.id === 'rcClockL' ? 'dualL' : 'dualR');
+      const st = now => { const p = reduce ? 1 : Math.min(1, (now - t0) / ms); el.textContent = fmtT(total * p); if (mir) mir.textContent = el.textContent; if (p < 1) raf.push(requestAnimationFrame(st)); else done && done(); };
+      raf.push(requestAnimationFrame(st)); };
+    const type = (el, txt, speed, cb) => { let i = 0; el.classList.add('is-typing'); const go = () => { el.textContent = txt.slice(0, ++i); E('xlFx').textContent = el.textContent;
+      if (i < txt.length) later(speed + Math.random() * speed, go); else { el.classList.remove('is-typing'); cb && cb(); } }; go(); };
+    const wa = (txt, who, me) => { const d = document.createElement('p'); d.className = 'wa2__m' + (me ? ' wa2__m--me' : '');
+      d.innerHTML = `${me ? '' : `<b>${who}</b>`}${txt}<em>${new Date().toTimeString().slice(0, 5)}</em>`; E('waBody').appendChild(d);
+      requestAnimationFrame(() => d.classList.add('is-in')); const b = E('waBody'); while (b.children.length > 4) b.firstElementChild.remove(); };
+    const reset = () => {
+      stop(); const S = SD[SECTOR];
+      ['xlA', 'xlB', 'xlC', 'xlD', 'xlE', 'xlFx'].forEach(id => E(id).textContent = '');
+      E('waBody').innerHTML = ''; E('logOld').innerHTML = ''; E('crmFeed').innerHTML = ''; E('crmCount').textContent = '0';
+      E('rcClockL').textContent = '0:00'; E('rcClockR').textContent = '0:00'; E('dualL').textContent = '0:00'; E('dualR').textContent = '0:00';
+      E('rcMetricL').textContent = S.metric; E('rcMetricR').textContent = S.metric;
+      E('stampOld').textContent = S.before.verdict; E('stampNew').textContent = S.after.verdict;
+      E('crmSteps').innerHTML = S.after.steps.map(([t, h]) => `<li><i></i><span class="mono">${t}</span><b>${h}</b></li>`).join('');
+      E('endOld').textContent = S.before.label; E('endNew').textContent = S.after.label;
+      E('barNew').style.setProperty('--r', Math.max(.03, S.after.total / S.before.total).toFixed(3));
+      E('raceGain').textContent = Math.min(99, Math.round((1 - S.after.total / S.before.total) * 100)) + '%';
+      race.className = 'race is-reset'; void race.offsetWidth; race.classList.remove('is-reset');
+      E('xlSave').textContent = 'Not saved';
     };
-    $$('.ba__switch button', ba).forEach(b => b.addEventListener('click', () => { auto = false; show(b.dataset.mode); }));
-    let played = false;
-    onView(ba, v => { if (v && !played) { played = true; lanes(); show('before'); timers.push(setTimeout(() => auto && show('after'), 4600)); } }, .4);
-    document.addEventListener('opsmo:sector', () => { lanes(); auto = true; played = true; show('before'); timers.push(setTimeout(() => auto && show('after'), 4200)); });
+    const run = () => {
+      reset(); running = true; const S = SD[SECTOR];
+      const item = S.items[0], src = S.sources[0], name = NAMES[0];
+      race.classList.add('is-run');
+      /* ---- LEFT: slow, manual ---- */
+      clock(E('rcClockL'), S.before.total, 11000);
+      later(300, () => wa(`New enquiry 👀 ${item} from ${src}`, 'Reception'));
+      later(900, () => type(E('xlA'), name, 140, () => type(E('xlB'), src, 120, () => later(900, () => type(E('xlC'), '#N/A', 160)))));
+      later(2600, () => wa('Who is free to take this?', 'Manager'));
+      later(4400, () => wa('With a client, will check later', 'Omar'));
+      later(5600, () => { race.classList.add('is-dup'); E('xlSave').textContent = 'Someone else is editing'; });
+      later(6800, () => wa(`Did anyone reply to ${name.split(' ')[0]}?`, 'Manager'));
+      later(8600, () => { type(E('xlD'), 'Call back?', 150); wa('Sorry, just saw this 🙏', 'Lina', true); });
+      S.before.steps.forEach(([t, h], i) => later(400 + i * 2400, () => { const li = document.createElement('li'); li.innerHTML = `<span class="mono">${t}</span>${h}`; E('logOld').appendChild(li); requestAnimationFrame(() => li.classList.add('is-in')); }));
+      later(11200, () => race.classList.add('is-lost'));
+      /* ---- RIGHT: instant, automatic ---- */
+      E('crmSrc').textContent = src; E('crmName').textContent = name; E('crmWhat').textContent = item; E('crmSt').textContent = 'New';
+      E('crmOwner').innerHTML = '<i>…</i>Assigning'; E('crmNext').textContent = '—'; E('crmPushT').textContent = `${name} · tap to call`;
+      clock(E('rcClockR'), S.after.total, 2400, () => race.classList.add('is-won'));
+      later(200, () => race.classList.add('s1'));
+      const steps = $$('#crmSteps li'); steps.forEach((li, i) => later(300 + i * 520, () => li.classList.add('is-on')));
+      later(800, () => { E('crmOwner').innerHTML = `<i>${OWN[0][0]}</i>${OWN[0]}`; race.classList.add('s2'); });
+      later(1300, () => race.classList.add('s3'));
+      later(2100, () => { E('crmSt').textContent = S.stages[1]; E('crmNext').textContent = 'Follow-up booked'; race.classList.add('s4'); });
+      // after the first one, the system keeps clearing requests while the left side is still stuck
+      let n = 0; const more = () => { n++; E('crmCount').textContent = n;
+        const r = document.createElement('div'); const o = OWN[n % OWN.length];
+        r.innerHTML = `<i>${o[0]}</i><b>${NAMES[n % NAMES.length]}</b><span>${S.items[n % S.items.length]}</span><em>✓ ${3 + (n * 7) % 9}s</em>`;
+        E('crmFeed').prepend(r); requestAnimationFrame(() => r.classList.add('is-in')); const f = E('crmFeed'); while (f.children.length > 4) f.lastElementChild.remove();
+        if (n < 14) later(560, more); };
+      later(2600, more);
+      later(11800, () => { race.classList.add('is-end'); running = false; });
+    };
+    E('raceReplay').addEventListener('click', run);
+    onView(race, v => { if (v && !played) { played = true; run(); } }, .35);
+    document.addEventListener('opsmo:sector', () => { played = true; run(); });
   }
 
   /* ---------- calculator ---------- */

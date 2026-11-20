@@ -128,7 +128,7 @@ def receive_list():
 def receive_block():
     return sec(head("", "What you receive") + receive_list(), "sec--paper")
 def cases_block(c):
-    return sec(f'<div class="cases rv"><span class="mono acc">SUCCESS STORIES</span><p>A PropTech platform, a law firm, a car workshop and a microfinance lender: four Zoho One transformations, from spreadsheets and WhatsApp to one operating system.</p><a class="btn btn--line btn--sm" {a_attrs(c,"/success-stories")}>Read the success stories {ARROW}</a></div>', "sec--tight")
+    return sec(f'<div class="cases rv"><span class="mono acc">SUCCESS STORIES</span><p>PropSpace, Elnaggar &amp; Partners, R1 Performance and Fawry Microfinance: four Zoho One transformations, from spreadsheets and WhatsApp to one operating system.</p><a class="btn btn--line btn--sm" {a_attrs(c,"/success-stories")}>Read the success stories {ARROW}</a></div>', "sec--tight")
 def related_block(c, slugs):
     def tl(s): return SS_TAGLINE if s=="software-selection" else SOL[s]["tagline"]
     cards = "".join(f'<a class="rcard rv" {a_attrs(c,"/solutions/"+s)}><span class="mono acc">[SYSTEM: {SOL_META[s][0]}]</span><h3>{E(SOL_META[s][2])}</h3><p>{E(tl(s))}</p><span class="rcard__go">{ARROW}</span></a>' for s in slugs)
