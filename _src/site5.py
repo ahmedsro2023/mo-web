@@ -60,11 +60,27 @@ def marquee(c):
     row2 = "".join(logo(c, n, "", cl).replace('alt=""', 'alt="" aria-hidden="true"') for n, a, cl in CLIENT_LOGOS)
     return f'<div class="marquee" aria-label="Businesses OPSMO and its founder have built systems for"><div class="marquee__track">{row}{row2}</div></div>'
 
-def videos_block(c, eyebrow="In his words", h="Hear it from the operator.", lead="Short videos from Mohamed on LinkedIn — on Zoho, operating models and why most problems aren't software problems."):
-    cards = "".join(f'''<figure class="vid rv"><button class="vid__play" type="button" data-embed="https://www.linkedin.com/embed/feed/update/urn:li:activity:{i}" aria-label="Play video: {E(t)}">
-<img src="{c.asset("img/"+p)}" alt="Video still from Mohamed Refaat's LinkedIn post" loading="lazy"><span class="vid__btn" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span><span class="vid__dur mono">{d}</span></button>
-<figcaption><h3>{E(t)}</h3><p>{E(s)}</p><a class="mono" href="https://www.linkedin.com/feed/update/urn:li:activity:{i}/" target="_blank" rel="noopener">Watch on LinkedIn {EXT}</a></figcaption></figure>''' for i, p, d, t, s in VIDEOS)
+def videos_block(c, eyebrow="In his words", h="Hear it from the operator.", lead="Short videos from Mohamed on Zoho, operating models and why most problems aren't software problems."):
+    PLAY = '<span class="vid__btn" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>'
+    def card(i, p, d, t, s, n):
+        li = f"https://www.linkedin.com/feed/update/urn:li:activity:{i}/"
+        poster = c.asset("img/"+p)
+        if os.path.exists(os.path.join(os.path.dirname(__file__), "assets", "video", f"video{n}.mp4")):
+            media = (f'<div class="vid__frame"><video class="vid__v" playsinline preload="none" poster="{poster}" src="{c.asset(f"video/video{n}.mp4")}" aria-label="{E(t)}"></video>'
+                     f'<button class="vid__play" type="button" aria-label="Play video: {E(t)}">{PLAY}<span class="vid__dur mono">{d}</span></button>'
+                     f'<button class="vid__sound mono" type="button" aria-label="Turn sound on" hidden>Sound on</button></div>')
+        else:
+            media = (f'<a class="vid__frame vid__play" href="{li}" target="_blank" rel="noopener" aria-label="Watch on LinkedIn: {E(t)}">'
+                     f'<img src="{poster}" alt="" loading="lazy">{PLAY}<span class="vid__dur mono">{d}</span></a>')
+        return (f'<figure class="vid rv">{media}<figcaption><h3>{E(t)}</h3><p>{E(s)}</p>'
+                f'<a class="mono" href="{li}" target="_blank" rel="noopener">Comments on LinkedIn {EXT}</a></figcaption></figure>')
+    cards = "".join(card(*v, n+1) for n, v in enumerate(VIDEOS))
     return sec(f'<div class="head head--split"><div>{chip(eyebrow)}<h2 class="h2 rv">{em_last(h)}</h2></div><p class="lead rv">{E(lead)}</p></div><div class="vids">{cards}</div>', "sec--videos")
+
+PROOF = [("950","+","organisations supported"),("500","+","advised at Zoho Egypt"),("300","+","Property Finder accounts"),("164","%","Q1 retention revenue growth"),("170","+","conferences delivered"),("17"," yrs","in commercial operations")]
+def proof_strip(c):
+    items = "".join(f'<li class="rv"><b class="num-big">{n}{u}</b><span>{E(t)}</span></li>' for n, u, t in PROOF)
+    return sec(f'<ul class="proof">{items}</ul>', "sec--proof")
 
 def stories_block(c, full=False):
     tabs = "".join(f'<button role="tab" class="stab{" is-on" if i==0 else ""}" aria-selected="{"true" if i==0 else "false"}" aria-controls="story-{k["slug"]}" id="tab-{k["slug"]}" data-i="{i}">{logo(c,k["logo"])}<span>{E(k["name"])}</span></button>' for i, k in enumerate(CASES))
@@ -314,7 +330,7 @@ _of = B.render_founder
 def render_founder(c):
     h = _of(c)
     i = h.rfind('<section class="ctax"')
-    return h[:i] + videos_block(c) + h[i:] if i > 0 else h + videos_block(c)
+    return h[:i] + proof_strip(c) + videos_block(c) + h[i:] if i > 0 else h + proof_strip(c) + videos_block(c)
 B.render_founder = render_founder
 B.nav_html = nav_html; B.footer_html = footer_html; B.cta_block = cta_block; B.render_home = render_home; B.THEME_BOOT = THEME_BOOT
 

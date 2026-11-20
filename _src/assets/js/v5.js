@@ -34,16 +34,45 @@
   }), { rootMargin: '0px 0px -12% 0px', threshold: .05 });
   $$('.seam').forEach(s => io.observe(s)); boots.forEach(b => io.observe(b));
 
-  /* counters */
-  const cio = new IntersectionObserver(es => es.forEach(e => {
-    if (!e.isIntersecting) return; cio.unobserve(e.target);
-    const el = e.target, end = +el.dataset.count;
-    if (reduce) { el.textContent = end.toLocaleString('en-US'); return; }
-    const t0 = performance.now(), dur = 1500;
-    const step = t => { const k = Math.min(1, (t - t0) / dur), v = Math.round(end * (1 - Math.pow(1 - k, 3))); el.textContent = v.toLocaleString('en-US'); if (k < 1) requestAnimationFrame(step); };
-    el.textContent = '0'; requestAnimationFrame(step);
-  }), { threshold: .4 });
-  $$('[data-count]').forEach(n => cio.observe(n));
+  /* numbers: every figure counts up when it scrolls in (prefix/suffix kept, ranges and decimals too) */
+  const NUM_SEL = '.leak b, .sty__rev, .sectors b, .zchap__facts b, .bt__stats b, .port__list li>b, .port__n, .bt--stat>b, .num-big, .tier__price, .price, .stat b';
+  const fmt = (v, dec, comma) => { const s = v.toFixed(dec); return comma ? (+s).toLocaleString('en-US', { minimumFractionDigits: dec, maximumFractionDigits: dec }) : s; };
+  const prep = el => {
+    if (el.dataset.numed) return; el.dataset.numed = 1;
+    $$('[data-count]', el).forEach(n => n.removeAttribute('data-count'));
+    const tw = document.createTreeWalker(el, NodeFilter.SHOW_TEXT), nodes = [];
+    while (tw.nextNode()) nodes.push(tw.currentNode);
+    nodes.forEach(t => {
+      if (!/\d/.test(t.textContent)) return;
+      const frag = document.createDocumentFragment();
+      t.textContent.split(/(\d[\d,]*(?:\.\d+)?)/).forEach(part => {
+        if (!/^\d/.test(part)) { if (part) frag.appendChild(document.createTextNode(part)); return; }
+        const comma = part.includes(','), raw = part.replace(/,/g, ''), dec = (raw.split('.')[1] || '').length, to = parseFloat(raw);
+        const sp = document.createElement('span'); sp.className = 'cnt'; sp.textContent = part;
+        sp.dataset.to = to; sp.dataset.dec = dec; sp.dataset.comma = comma ? 1 : '';
+        sp.dataset.from = (to >= 1900 && to <= 2100 && !dec) ? to - 17 : 0;   // years tick up, not from zero
+        frag.appendChild(sp);
+      });
+      t.replaceWith(frag);
+    });
+  };
+  const run = el => {
+    el.classList.add('num-in');
+    $$('.cnt', el).forEach((sp, k) => {
+      const to = +sp.dataset.to, from = +sp.dataset.from, dec = +sp.dataset.dec, comma = !!sp.dataset.comma;
+      if (reduce) { sp.textContent = fmt(to, dec, comma); return; }
+      const dur = 1400 + Math.min(900, Math.log10(to + 1) * 220), t0 = performance.now() + k * 120;
+      sp.textContent = fmt(from, dec, comma);
+      const step = now => { const p = Math.min(1, Math.max(0, (now - t0) / dur)), e = 1 - Math.pow(1 - p, 4);
+        sp.textContent = fmt(from + (to - from) * e, p < 1 ? (to < 10 && dec === 0 ? 0 : dec) : dec, comma);
+        if (p < 1) requestAnimationFrame(step); else { sp.textContent = fmt(to, dec, comma); el.classList.add('num-done'); } };
+      requestAnimationFrame(step);
+    });
+  };
+  const nio = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { nio.unobserve(e.target); run(e.target); } }), { threshold: .5 });
+  const lock = el => $$('.cnt', el).forEach(sp => { sp.style.minWidth = sp.getBoundingClientRect().width + 'px'; });
+  $$(NUM_SEL).forEach(el => { prep(el); if ($('.cnt', el)) { el.classList.add('num'); lock(el); nio.observe(el); } });
+  $$('[data-count]').forEach(n => { const p = n.parentElement; prep(p); p.classList.add('num'); lock(p); nio.observe(p); });
 
   /* cursor glow + bento spotlight + portrait tilt */
   const glow = $('#glow'), portrait = $('#portrait');
@@ -102,7 +131,19 @@
   $$('.storybox__tabs').forEach(l => tabs(l, '.stab', t => document.getElementById(t.getAttribute('aria-controls'))));
   $$('.explorer:not([data-sol]) .explorer__tabs').forEach(l => tabs(l, '.etab', t => document.getElementById(t.getAttribute('aria-controls'))));
 
-  /* LinkedIn video facades: load the official embed only on click */
+  /* native video cards: muted preview on hover, click plays with sound */
+  $$('.vid__frame').forEach(fr => {
+    const v = $('video', fr), btn = $('.vid__play', fr), snd = $('.vid__sound', fr); if (!v) return;
+    let started = false;
+    const start = () => { started = true; fr.classList.add('is-playing'); v.muted = false; v.controls = true; v.currentTime = fr.classList.contains('is-preview') ? 0 : v.currentTime; fr.classList.remove('is-preview'); v.play(); $$('.vid__v').forEach(o => { if (o !== v) o.pause(); }); };
+    btn.addEventListener('click', start);
+    if (desk() && !reduce) {
+      fr.addEventListener('mouseenter', () => { if (started) return; v.muted = true; fr.classList.add('is-preview'); v.play().catch(() => {}); });
+      fr.addEventListener('mouseleave', () => { if (started) return; v.pause(); fr.classList.remove('is-preview'); });
+    }
+    v.addEventListener('ended', () => { started = false; fr.classList.remove('is-playing'); v.controls = false; v.load(); });
+  });
+  /* (legacy) LinkedIn embeds */
   $$('.vid__play').forEach(b => b.addEventListener('click', () => {
     const f = document.createElement('iframe');
     f.src = b.dataset.embed; f.title = b.getAttribute('aria-label').replace('Play video: ', '');
