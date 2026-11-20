@@ -298,7 +298,7 @@ def footer_html(c):
 <div class="office office--gcc"><p class="office__t">{SOC["pin"]}<b>GCC &amp; MENA</b></p><span class="office__s">Served remotely and on-site from Dubai</span></div>
 {btn(c,"Book a Call","/book","fire",True)}</div></div></div>
 <div class="ft__base"><span>© 2026 OPSMO · opsmo.tech · Commercial operations &amp; digital transformation</span>
-<span class="ft__legal"><a {a_attrs(c,"/privacy")}>Privacy Policy</a><a {a_attrs(c,"/terms")}>Terms of Use</a><a href="{c.asset("../sitemap.xml")}">Sitemap</a><a href="#top" class="ft__top-btn">Back to top ↑</a></span></div>
+<span class="ft__legal"><a {a_attrs(c,"/privacy")}>Privacy Policy</a><a {a_attrs(c,"/terms")}>Terms of Use</a><a href="#top" class="ft__top-btn">Back to top ↑</a></span></div>
 <p class="ft__fine">Logos belong to their respective owners and describe past roles and client work. Zoho, Property Finder, PropSpace and Motivate Media Group are not affiliated with OPSMO unless stated in writing. Photography: Unsplash and OPSMO.</p>
 </div></footer>
 <div class="hook" id="hook" role="dialog" aria-label="Message from Mohamed Refaat" aria-hidden="true">
