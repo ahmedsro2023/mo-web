@@ -143,6 +143,9 @@
       fr.addEventListener('mouseleave', () => { if (started) return; v.pause(); fr.classList.remove('is-preview'); });
     }
     v.addEventListener('ended', () => { started = false; fr.classList.remove('is-playing'); v.controls = false; v.load(); });
+    v.addEventListener('pause', () => { if (started && v.currentTime > 0 && !v.ended) fr.classList.add('is-paused'); });
+    v.addEventListener('play', () => fr.classList.remove('is-paused'));
+    v.addEventListener('error', () => { const a = fr.closest('.vid').querySelector('figcaption a'); if (a) location.href = a.href; });
   });
   /* (legacy) LinkedIn embeds */
   $$('.vid__play').forEach(b => b.addEventListener('click', () => {
